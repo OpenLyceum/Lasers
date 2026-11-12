@@ -34,3 +34,37 @@ test("projector profile and French locale render on the multiple-atoms screen", 
   await page.screenshot({ path: "test-results/projector-fr.png" });
   expect(errors).toEqual([]);
 });
+
+test("energy lines can be dragged vertically without changing the other level", async ({ page }) => {
+  await page.goto("/?screens=2&ea");
+  const middle = page.getByRole("slider", { name: "Middle level above ground (eV)", exact: true });
+  const upper = page.getByRole("slider", { name: "Upper level above ground (eV)", exact: true });
+  await expect(middle).toBeAttached();
+  const oldMiddle = Number(await middle.getAttribute("aria-valuenow"));
+  const oldUpper = await upper.getAttribute("aria-valuenow");
+  const point = await page.evaluate((energy) => {
+    // Use Scenery's actual transform; the design rectangle is scaled and letterboxed by Joist.
+    const phet = (
+      window as unknown as {
+        phet: {
+          joist: {
+            sim: {
+              selectedScreenProperty: {
+                value: { view: { localToGlobalPoint: (p: object) => { x: number; y: number } } };
+              };
+            };
+          };
+          dot: Record<"Vector2", new (x: number, y: number) => object>;
+        };
+      }
+    ).phet;
+    const view = phet.joist.sim.selectedScreenProperty.value.view;
+    return view.localToGlobalPoint(new phet.dot.Vector2(800, 12 + 224 - energy * 53));
+  }, oldMiddle);
+  await page.mouse.move(point.x, point.y);
+  await page.mouse.down();
+  await page.mouse.move(point.x, point.y - 20, { steps: 6 });
+  await page.mouse.up();
+  expect(Number(await middle.getAttribute("aria-valuenow"))).toBeGreaterThan(oldMiddle);
+  expect(await upper.getAttribute("aria-valuenow")).toBe(oldUpper);
+});

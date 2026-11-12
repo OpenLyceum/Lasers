@@ -48,3 +48,20 @@ export const PHYSICS = {
   kaboom: 300,
   lasing: 40,
 } as const;
+
+/** Reference layout: apparatus at left, energy chart and grouped controls at right. */
+export const VIEW = {
+  sidebarX: 658,
+  sidebarWidth: 354,
+  margin: 12,
+  cavityX: 150,
+  cavityY: 220,
+  scale: 1.1,
+  cavityWidth: 330,
+  cavityHeight: 132,
+  toolbarY: 550,
+  chartWidth: 330,
+  chartHeight: 266,
+  levelScale: 53,
+  groundY: 224,
+} as const;

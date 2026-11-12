@@ -4,7 +4,7 @@
  * Defines all dynamic colors for the simulation using ProfileColorProperty.
  *
  * Each color has two profiles:
- *   - "default"   — used in standard (dark) mode
+ *   - "default"   — used for the original-style white apparatus
  *   - "projector" — used when the user enables Projector Mode in Preferences
  *
  * SceneryStack switches profiles automatically; no manual toggling is needed.
@@ -29,10 +29,10 @@ import LasersNamespace from "./LasersNamespace.js";
 const LasersColors = {
   /**
    * Background color for the simulation screen.
-   * Deep navy in default mode; white in projector mode.
+   * White apparatus field in both profiles.
    */
   backgroundColorProperty: new ProfileColorProperty(LasersNamespace, "background", {
-    default: "#1a1a2e",
+    default: "#ffffff",
     projector: "#ffffff",
   }),
 
@@ -47,39 +47,48 @@ const LasersColors = {
 
   /**
    * Background fill for control panels and dialogs.
-   * Deep blue in default mode; light gray in projector mode.
+   * Muted green-gray control surfaces, inspired by the original.
    */
   panelBackgroundColorProperty: new ProfileColorProperty(LasersNamespace, "panelBackground", {
-    default: "#16213e",
-    projector: "#f5f5f5",
+    default: "#e4e9e5",
+    projector: "#f1f3ef",
   }),
 
   /**
    * Border/stroke color for control panels and dialogs.
-   * Teal-navy in default mode; medium gray in projector mode.
+   * Muted borders on the light control surfaces.
    */
   panelBorderColorProperty: new ProfileColorProperty(LasersNamespace, "panelBorder", {
-    default: "#0f3460",
-    projector: "#999999",
+    default: "#7d9086",
+    projector: "#77857c",
   }),
 
   /**
    * Text color for labels, readouts, and general UI text.
-   * Near-white in default mode; near-black in projector mode.
+   * Dark labels on light backgrounds in both profiles.
    */
   textColorProperty: new ProfileColorProperty(LasersNamespace, "text", {
-    default: "#e0e0e0",
-    projector: "#1a1a1a",
+    default: "#18251f",
+    projector: "#101710",
   }),
 
-  atomColorProperty: new ProfileColorProperty(LasersNamespace, "atom", { default: "#aabaca", projector: "#555555" }),
-  laserColorProperty: new ProfileColorProperty(LasersNamespace, "laser", { default: "#ff656b", projector: "#b50020" }),
-  pumpColorProperty: new ProfileColorProperty(LasersNamespace, "pump", { default: "#78b9ff", projector: "#005fb5" }),
+  atomColorProperty: new ProfileColorProperty(LasersNamespace, "atom", { default: "#888080", projector: "#888080" }),
+  laserColorProperty: new ProfileColorProperty(LasersNamespace, "laser", { default: "#ed2024", projector: "#bd0018" }),
+  pumpColorProperty: new ProfileColorProperty(LasersNamespace, "pump", { default: "#335aff", projector: "#1746b0" }),
   upperColorProperty: new ProfileColorProperty(LasersNamespace, "upper", { default: "#dba2ff", projector: "#7422aa" }),
   mirrorColorProperty: new ProfileColorProperty(LasersNamespace, "mirror", {
-    default: "#a7dfe8",
-    projector: "#276276",
+    default: "#999999",
+    projector: "#777777",
   }),
+  cavityColorProperty: new ProfileColorProperty(LasersNamespace, "cavity", {
+    default: "#aaa4be",
+    projector: "#c4c1d0",
+  }),
+  meterBackgroundColorProperty: new ProfileColorProperty(LasersNamespace, "meterBackground", {
+    default: "#17221c",
+    projector: "#17221c",
+  }),
+  gainColorProperty: new ProfileColorProperty(LasersNamespace, "gain", { default: "#48c84c", projector: "#248b29" }),
   // ── Light control surfaces ───────────────────────────────────────────────────
   // White chrome (combo boxes, flat push buttons, editable input fields) stays light
   // in both profiles; its text stays dark. Same values in default and projector mode,

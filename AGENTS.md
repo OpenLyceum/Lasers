@@ -21,6 +21,6 @@ Keep repository visibility PRIVATE. Local dev/preview only. No Pages workflow, c
 - `.github/workflows/deploy.yml`: intentionally absent during private development; no GitHub Pages.
 - `.github/workflows/ci.yml`: build-only reusable Baton CI; fleet compliance and private-plan-dependent security workflows deferred.
 - `tests/generators.test.ts`: omitted because template-only rename/scaffold scripts are removed after bootstrap.
-- `assets/`: contains the attributed upstream laser photograph displayed by the simulation.
+- `assets/`: contains the attributed upstream laser photograph and PhET-authored lamp, mirror, and atom sprites.
 - `doc/licenses/`: retained upstream license text.
 - `src/common/model/LaserModel.ts`: owned mutable particle records and seeded RNG avoid allocating Properties for hundreds of short-lived photons; aggregate readouts remain observable.

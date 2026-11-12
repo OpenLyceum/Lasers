@@ -1,6 +1,6 @@
 # Upstream provenance and behavior inventory
 
-Reference: PhET SVN `https://phet.unfuddle.com/svn/phet_svn/trunk`, revision **75234**. Retrieved via SVN on 2026-11-12. Local immutable references are `../Baseline/PhET/lasers` and `../Baseline/PhET/quantum`, targeted checkouts of `simulations-java/simulations/lasers` and `simulations-java/common/quantum`. No reference contents are shipped in the application bundle except the photograph.
+Reference: PhET SVN `https://phet.unfuddle.com/svn/phet_svn/trunk`, revision **75234**. Retrieved via SVN on 2026-11-12. Local immutable references are `../Baseline/PhET/lasers` and `../Baseline/PhET/quantum`, targeted checkouts of `simulations-java/simulations/lasers` and `simulations-java/common/quantum`. The photograph and selected PhET-authored apparatus sprites are included with their original attribution.
 
 Reproduce retrieval with `svn checkout --username guest --password guest https://phet.unfuddle.com/svn/phet_svn/trunk/simulations-java/simulations/lasers@75234 ../Baseline/PhET/lasers` and the equivalent common/quantum checkout. The catalog's full-archive alternative is `../Baseline/scripts/fetch-baselines.sh --only PhET/trunk`.
 
@@ -32,6 +32,10 @@ Original Java Lasers and shared quantum code: Copyright 2002–2012 University o
 
 The Java model advances 12 model ms at 25 fps. The port maps this to 300 model ms per real second and 150 apparatus units/s photon speed. Fixed 1/120 s substeps replace Java frame stepping; squared-log lifetimes and mirror double sampling are preserved. The Java ground-state recovery thread becomes a simulation-time timer so pause and deterministic replay work consistently. Positions use apparatus units, not physical cavity metres.
 
-Energy-level sliders replace draggable Java level lines. Ground energy is displayed relative to zero; middle and upper sliders use non-overlapping ranges to preserve ordering. Styling and artwork are rendered in SceneryStack, with new accessibility and localized controls. Legacy developer view options (photon diameter, comet shape, pair separation, background color and profiling) are not reproduced. Photon colors follow wavelength; UV and infrared use symbolic blue and purple. Atom colors encode state. The power readout includes outgoing photons per second rather than a calibrated watt value.
+Energy-level lines are draggable thumbs of accessible SceneryStack vertical sliders, with lifetime controls alongside the chart. Ground energy is displayed relative to zero; middle and upper sliders use non-overlapping ranges to preserve ordering. Styling and artwork are rendered in SceneryStack, with new accessibility and localized controls. Legacy developer view options (photon diameter, comet shape, pair separation, background color and profiling) are not reproduced. Photon colors follow wavelength; UV and infrared use symbolic blue and purple. Atom colors encode state. The power readout includes outgoing photons per second rather than a calibrated watt value.
 
 Automated source-scenario tests check transition rules, constants, deterministic transport, and population inversion. They do not constitute a side-by-side execution comparison with the original Java app; exact stochastic trajectory equivalence is not claimed.
+
+## Apparatus artwork
+
+The reference-oriented UI uses upstream `flashlight.png`, `mirror.gif`, and gray/red/blue medium atom sprites from `lasers/data/lasers/images/`. These are explicitly attributed to PhET in the retained `assets/phet/license.txt`. No flame sprites or other assets with external/uncertain attribution are used. The main apparatus uses a white field with the lamps, cavity, and two power gauges arranged as in the upstream screenshot. SceneryStack owns all interactive controls.

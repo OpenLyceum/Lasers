@@ -1,6 +1,6 @@
 # Implementation notes
 
-The two screens use the same model implementation with independent instances and the same accessible view. Localized labels support English, French, and Spanish. Photon paths are grouped by wavelength, atoms by state, and the energy-level diagram shows current populations.
+The two screens use the same model implementation with independent instances and the same accessible view. Localized labels support English, French, and Spanish. The interface follows the upstream arrangement: lamp controls with spectrum sliders beside the optical apparatus, labeled atoms inside a cylindrical cavity, stacked internal/output power gauges, and the energy chart above grouped options in the right sidebar. Photon paths are grouped by wavelength. The level lines are accessible VSlider thumbs; lifetime sliders sit alongside them. Advanced stimulation controls live in a dialog.
 
 Private development intentionally omits deployment and fleet registration. CI runs lint/typecheck/tests/build through Baton's reusable build workflow. The shared compliance checker still reports its unconditional deployment/security workflow requirements; these private-phase deviations are documented in AGENTS.md rather than changing Baton.
 
