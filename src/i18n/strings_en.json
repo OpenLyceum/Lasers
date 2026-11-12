@@ -1,21 +1,65 @@
 {
-  "title": "SceneryStack Template",
+  "title": "Lasers",
   "screens": {
-    "sim": "Sim"
+    "oneAtom": "One Atom",
+    "multipleAtoms": "Multiple Atoms"
   },
   "a11y": {
-    "screenSummary": {
-      "playArea": "The play area shows the main simulation content.",
-      "controlArea": "The control area has a Reset All button that returns the simulation to its starting state.",
-      "interactionHint": "Explore the simulation by interacting with its controls."
+    "oneAtom": {
+      "screenSummary": {
+        "playArea": "Atoms in a cavity absorb resonant light and emit photons. Adjust levels, lamps, lifetimes, and mirrors.",
+        "controlArea": "Use sliders to configure light and energy levels. Checkboxes change the cavity and display. Pause, step, or reset the experiment.",
+        "interactionHint": "Try three levels, match the pump wavelength to the upper transition, then enable mirrors."
+      },
+      "currentDetails": "Atoms in a cavity absorb resonant light and emit photons. Adjust levels, lamps, lifetimes, and mirrors."
     },
-    "currentDetails": "The simulation is in its initial state.",
-    "controls": {
-      "exampleControl": "Example control"
+    "multipleAtoms": {
+      "screenSummary": {
+        "playArea": "Atoms in a cavity absorb resonant light and emit photons. Adjust levels, lamps, lifetimes, and mirrors.",
+        "controlArea": "Use sliders to configure light and energy levels. Checkboxes change the cavity and display. Pause, step, or reset the experiment.",
+        "interactionHint": "Try three levels, match the pump wavelength to the upper transition, then enable mirrors."
+      },
+      "currentDetails": "Atoms in a cavity absorb resonant light and emit photons. Adjust levels, lamps, lifetimes, and mirrors."
     }
   },
   "preferences": {
-    "title": "Simulation",
-    "exampleToggle": "Example Toggle"
+    "title": "Simulation"
+  },
+  "lab": {
+    "pumpRate": "Pump rate (photons/s)",
+    "seedRate": "Seed rate (photons/s)",
+    "pumpWavelength": "Pump wavelength (nm)",
+    "seedWavelength": "Seed wavelength (nm)",
+    "middleEnergy": "Middle level above ground (eV)",
+    "highEnergy": "Upper level above ground (eV)",
+    "middleLifetime": "Middle lifetime (model ms)",
+    "highLifetime": "Upper lifetime (model ms)",
+    "reflectivity": "Right mirror reflectivity (%)",
+    "threeLevels": "Three energy levels",
+    "mirrors": "Enable mirrors",
+    "showUpper": "Show upper-state photons",
+    "beam": "Lamp as beam",
+    "wave": "Lower transition as wave",
+    "speed": "Simulation rate",
+    "playing": "Play / pause",
+    "step": "Step",
+    "allStimulated": "All stimulated transitions",
+    "stimulation": "Stimulation probability",
+    "photo": "Actual laser photograph",
+    "close": "Close",
+    "oneTitle": "Absorption and emission",
+    "manyTitle": "Population inversion and lasing",
+    "energyTitle": "Configure electronic energy levels",
+    "pumpTitle": "Optical pumping",
+    "seedTitle": "Seed light and time",
+    "status": "Ground: {0}  •  Middle: {1}  •  Upper: {2}",
+    "power": "Cavity photons: {0}  •  Output: {1} photons/s",
+    "lasing": "Lasing",
+    "danger": "Your laser blew up! Reset All to restart.",
+    "legend": "Atoms: gray / red / blue = ground / middle / upper. Dots = photons.",
+    "hint": "Try three levels, match the pump wavelength to the upper transition, then enable mirrors.",
+    "summary": "Atoms in a cavity absorb resonant light and emit photons. Adjust levels, lamps, lifetimes, and mirrors.",
+    "controls": "Use sliders to configure light and energy levels. Checkboxes change the cavity and display. Pause, step, or reset the experiment.",
+    "live": "Ground population {0}; middle population {1}; upper population {2}; horizontal photons {3}."
   }
 }

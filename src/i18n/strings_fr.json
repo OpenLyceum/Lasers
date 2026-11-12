@@ -1,21 +1,65 @@
 {
-  "title": "Modèle de Simulation",
+  "title": "Lasers",
   "screens": {
-    "sim": "Simulation"
+    "oneAtom": "Un atome",
+    "multipleAtoms": "Plusieurs atomes"
   },
   "a11y": {
-    "screenSummary": {
-      "playArea": "La zone de jeu affiche le contenu principal de la simulation.",
-      "controlArea": "La zone de contrôle comporte un bouton Tout réinitialiser qui ramène la simulation à son état initial.",
-      "interactionHint": "Explorez la simulation en interagissant avec ses commandes."
+    "oneAtom": {
+      "screenSummary": {
+        "playArea": "Des atomes dans une cavité absorbent la lumière résonante et émettent des photons.",
+        "controlArea": "Les curseurs règlent les lampes, niveaux et durées. Les cases règlent la cavité et l’affichage.",
+        "interactionHint": "Essayez trois niveaux, accordez la pompe à la transition supérieure, puis activez les miroirs."
+      },
+      "currentDetails": "Des atomes dans une cavité absorbent la lumière résonante et émettent des photons."
     },
-    "currentDetails": "La simulation est dans son état initial.",
-    "controls": {
-      "exampleControl": "Contrôle d'exemple"
+    "multipleAtoms": {
+      "screenSummary": {
+        "playArea": "Des atomes dans une cavité absorbent la lumière résonante et émettent des photons.",
+        "controlArea": "Les curseurs règlent les lampes, niveaux et durées. Les cases règlent la cavité et l’affichage.",
+        "interactionHint": "Essayez trois niveaux, accordez la pompe à la transition supérieure, puis activez les miroirs."
+      },
+      "currentDetails": "Des atomes dans une cavité absorbent la lumière résonante et émettent des photons."
     }
   },
   "preferences": {
-    "title": "Simulation",
-    "exampleToggle": "Exemple de bascule"
+    "title": "Simulation"
+  },
+  "lab": {
+    "pumpRate": "Débit de pompage (photons/s)",
+    "seedRate": "Débit incident (photons/s)",
+    "pumpWavelength": "Longueur d’onde de pompe (nm)",
+    "seedWavelength": "Longueur d’onde incidente (nm)",
+    "middleEnergy": "Niveau intermédiaire (eV)",
+    "highEnergy": "Niveau supérieur (eV)",
+    "middleLifetime": "Durée intermédiaire (ms du modèle)",
+    "highLifetime": "Durée supérieure (ms du modèle)",
+    "reflectivity": "Réflectivité du miroir droit (%)",
+    "threeLevels": "Trois niveaux d’énergie",
+    "mirrors": "Activer les miroirs",
+    "showUpper": "Photons du niveau supérieur",
+    "beam": "Lampe en faisceau",
+    "wave": "Transition basse en onde",
+    "speed": "Vitesse de simulation",
+    "playing": "Lecture / pause",
+    "step": "Un pas",
+    "allStimulated": "Toutes les transitions stimulées",
+    "stimulation": "Probabilité de stimulation",
+    "photo": "Photographie d’un laser",
+    "close": "Fermer",
+    "oneTitle": "Absorption et émission",
+    "manyTitle": "Inversion de population et effet laser",
+    "energyTitle": "Configurer les niveaux électroniques",
+    "pumpTitle": "Pompage optique",
+    "seedTitle": "Lumière incidente et temps",
+    "status": "Fondamental : {0} • Intermédiaire : {1} • Supérieur : {2}",
+    "power": "Photons en cavité : {0} • Sortie : {1} photons/s",
+    "lasing": "Effet laser",
+    "danger": "Le laser a explosé ! Réinitialisez pour recommencer.",
+    "legend": "Atomes gris / rouges / bleus : fondamental / intermédiaire / supérieur. Points : photons.",
+    "hint": "Essayez trois niveaux, accordez la pompe à la transition supérieure, puis activez les miroirs.",
+    "summary": "Des atomes dans une cavité absorbent la lumière résonante et émettent des photons.",
+    "controls": "Les curseurs règlent les lampes, niveaux et durées. Les cases règlent la cavité et l’affichage.",
+    "live": "Population fondamentale {0} ; intermédiaire {1} ; supérieure {2} ; photons horizontaux {3}."
   }
 }

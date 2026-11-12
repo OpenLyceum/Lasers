@@ -1,21 +1,65 @@
 {
-  "title": "Plantilla de Simulación",
+  "title": "Lasers",
   "screens": {
-    "sim": "Simulación"
+    "oneAtom": "Un átomo",
+    "multipleAtoms": "Varios átomos"
   },
   "a11y": {
-    "screenSummary": {
-      "playArea": "El área de juego muestra el contenido principal de la simulación.",
-      "controlArea": "El área de control tiene un botón Restablecer todo que devuelve la simulación a su estado inicial.",
-      "interactionHint": "Explora la simulación interactuando con sus controles."
+    "oneAtom": {
+      "screenSummary": {
+        "playArea": "Los átomos absorben luz resonante y emiten fotones en una cavidad.",
+        "controlArea": "Los deslizadores ajustan luz, niveles y vidas. Las casillas cambian la cavidad y la vista.",
+        "interactionHint": "Prueba tres niveles, ajusta el bombeo a la transición superior y activa los espejos."
+      },
+      "currentDetails": "Los átomos absorben luz resonante y emiten fotones en una cavidad."
     },
-    "currentDetails": "La simulación está en su estado inicial.",
-    "controls": {
-      "exampleControl": "Control de ejemplo"
+    "multipleAtoms": {
+      "screenSummary": {
+        "playArea": "Los átomos absorben luz resonante y emiten fotones en una cavidad.",
+        "controlArea": "Los deslizadores ajustan luz, niveles y vidas. Las casillas cambian la cavidad y la vista.",
+        "interactionHint": "Prueba tres niveles, ajusta el bombeo a la transición superior y activa los espejos."
+      },
+      "currentDetails": "Los átomos absorben luz resonante y emiten fotones en una cavidad."
     }
   },
   "preferences": {
-    "title": "Simulación",
-    "exampleToggle": "Ejemplo de alternancia"
+    "title": "Simulación"
+  },
+  "lab": {
+    "pumpRate": "Bombeo (fotones/s)",
+    "seedRate": "Luz incidente (fotones/s)",
+    "pumpWavelength": "Longitud de onda de bombeo (nm)",
+    "seedWavelength": "Longitud de onda incidente (nm)",
+    "middleEnergy": "Nivel intermedio (eV)",
+    "highEnergy": "Nivel superior (eV)",
+    "middleLifetime": "Vida intermedia (ms del modelo)",
+    "highLifetime": "Vida superior (ms del modelo)",
+    "reflectivity": "Reflectividad del espejo derecho (%)",
+    "threeLevels": "Tres niveles de energía",
+    "mirrors": "Activar espejos",
+    "showUpper": "Fotones del nivel superior",
+    "beam": "Lámpara como haz",
+    "wave": "Transición inferior como onda",
+    "speed": "Velocidad de simulación",
+    "playing": "Reproducir / pausar",
+    "step": "Un paso",
+    "allStimulated": "Todas las transiciones estimuladas",
+    "stimulation": "Probabilidad de estimulación",
+    "photo": "Fotografía de un láser",
+    "close": "Cerrar",
+    "oneTitle": "Absorción y emisión",
+    "manyTitle": "Inversión de población y emisión láser",
+    "energyTitle": "Configurar niveles electrónicos",
+    "pumpTitle": "Bombeo óptico",
+    "seedTitle": "Luz incidente y tiempo",
+    "status": "Fundamental: {0} • Intermedio: {1} • Superior: {2}",
+    "power": "Fotones en cavidad: {0} • Salida: {1} fotones/s",
+    "lasing": "Emisión láser",
+    "danger": "¡El láser explotó! Reinicia para continuar.",
+    "legend": "Átomos grises / rojos / azules: fundamental / intermedio / superior. Puntos: fotones.",
+    "hint": "Prueba tres niveles, ajusta el bombeo a la transición superior y activa los espejos.",
+    "summary": "Los átomos absorben luz resonante y emiten fotones en una cavidad.",
+    "controls": "Los deslizadores ajustan luz, niveles y vidas. Las casillas cambian la cavidad y la vista.",
+    "live": "Población fundamental {0}; intermedia {1}; superior {2}; fotones horizontales {3}."
   }
 }

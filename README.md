@@ -1,66 +1,25 @@
-# SceneryStack Template
-
-[![CI](../../actions/workflows/ci.yml/badge.svg)](../../actions/workflows/ci.yml)
-
-A reusable SceneryStack simulation template for one or N screens, built with
-[SceneryStack](https://scenerystack.org/), Vite 8, TypeScript 7, and Biome 2.
+# Lasers
 
 ## Features
 
-- SceneryStack scaffold with model/view separation (`rename` + `scaffold-screens` for one or N screens)
-- English, Spanish, and French localization via `StringManager`
-- Default and projector color profiles
-- Progressive Web App (installable, offline-capable)
-- Git hooks for Biome pre-commit checks
-- Shared GitHub Actions CI via `OpenLyceum/Baton`
+Private TypeScript/SceneryStack port of PhET Lasers: one atom and multiple atoms, absorption, spontaneous and stimulated emission, adjustable energy levels and lifetimes, optical pumping, mirrors, photon/beam/wave views, population readouts, keyboard controls, English/French/Spanish, and projector mode.
 
 ## Quick Start
 
-```bash
-npm install
-npm run icons    # generate PNG icons from public/icons/icon.svg
-npm start        # dev server → http://localhost:5173
-```
+Use Node 26. Run `npm ci`, then `npm start`. For a local production preview, run `npm run build` followed by `npm run preview`. No hosted deployment is configured.
 
 ## Scripts
 
-| Command | Description |
-|---|---|
-| `npm start` / `npm run dev` | Start Vite dev server |
-| `npm run build` | Type-check + production build → `dist/` |
-| `npm run preview` | Preview the production build locally |
-| `npm test` | Run Vitest unit tests (includes memory-leak suite) |
-| `npm run test:fuzz` | Optional Playwright fuzz smoke: pointer (`?fuzz`) + keyboard (`?fuzzBoard`), with `?ea`, 30s each |
-| `npm run test:fuzz -- 90` | Same fuzz for 90 seconds (`--duration 90` or `FUZZ_DURATION=90` also work) |
-| `npm run test:fuzz:quick` | Shorter fuzz smoke (10s) |
-| `npm run test:fuzz:long` | Longer fuzz smoke (300s) |
-| `npm run check` | TypeScript type check |
-| `npm run lint` | Biome lint check |
-| `npm run format` | Auto-format all files |
-| `npm run fix` | Lint + auto-fix |
-| `npm run icons` | Regenerate PNG icons from `public/icons/icon.svg` |
-| `npm run rename` | Sim-level fork/rename (`--id`, `--name`) |
-| `npm run scaffold-screens` | Emit N fleet-named screen packages from `sim-screen/` (`--shared-model` optional) |
-| `npm run release` | `check && lint && build && test`, then version patch + push tags |
-| `npm run clean` | Remove `dist/` |
-
-New sims start at `version: "0.0.0"` in `package.json`. Bump only when cutting a release (for example `npm version patch` and a matching git tag). Keep `name` in kebab-case; it is separate from the SceneryStack sim identifier in `src/init.ts`, which reads its `version` from `package.json`.
+`npm run lint`, `npm run check`, `npm test`, `npm run build`, `npm run test:fuzz`, and `npx playwright test tests/browser`. Set `FUZZ_PORT` when other simulations are running.
 
 ## Tech Stack
 
-| Tool | Version | Purpose |
-|---|---|---|
-| [SceneryStack](https://scenerystack.org/) | ^3.0.0 | Simulation framework |
-| [Vite](https://vitejs.dev/) | ^8 | Build tool + dev server |
-| [TypeScript](https://www.typescriptlang.org/) | ^7 | Type-safe JavaScript |
-| [Biome](https://biomejs.dev/) | ^2.5 | Linting + formatting |
-| [vite-plugin-pwa](https://vite-pwa-org.netlify.app/) | ^2 | PWA + service worker |
+SceneryStack 3, TypeScript 7, Vite 8, Biome 2, Vitest, and Playwright. Source provenance, feature inventory, and numerical differences: [doc/upstream.md](doc/upstream.md).
 
 ## License
 
-GNU Affero General Public License v3.0 — see [OpenLyceum org license](https://github.com/OpenLyceum/.github/blob/main/LICENSE).
+Port infrastructure is AGPL-3.0-or-later. PhET source-derived behavior and the upstream photograph retain University of Colorado attribution and the upstream GPL notice in [doc/licenses/PhET-GPL-2.txt](doc/licenses/PhET-GPL-2.txt). See [doc/upstream.md](doc/upstream.md). This is an OpenLyceum adaptation, not an official PhET product.
 
 ## Contributing
 
-See [OpenLyceum contributing guidelines](https://github.com/OpenLyceum/.github/blob/main/CONTRIBUTING.md).
-Report bugs via GitHub Issues; use org issue templates.
+Private development only; follow AGENTS.md and the organization conventions. Do not publish or onboard this repository until explicitly requested.

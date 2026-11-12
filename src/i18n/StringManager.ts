@@ -50,27 +50,6 @@ const stringProperties = LocalizedString.getNestedStringProperties({
  * Keep this in sync with the `a11y` key in `strings_en.json` — a locale key
  * rename that is not mirrored here fails at the getter return (not silently).
  */
-export type SimA11yStrings = {
-  readonly screenSummary: {
-    readonly playAreaStringProperty: ReadOnlyProperty<string>;
-    readonly controlAreaStringProperty: ReadOnlyProperty<string>;
-    readonly interactionHintStringProperty: ReadOnlyProperty<string>;
-  };
-  readonly currentDetailsStringProperty: ReadOnlyProperty<string>;
-  readonly controls: {
-    readonly exampleControlStringProperty: ReadOnlyProperty<string>;
-  };
-};
-
-/**
- * Explicit Preferences → Simulation labels from {@link StringManager.getPreferences}.
- * Same sync rule as {@link SimA11yStrings}.
- */
-export type SimPreferenceStrings = {
-  readonly titleStringProperty: ReadOnlyProperty<string>;
-  readonly exampleToggleStringProperty: ReadOnlyProperty<string>;
-};
-
 /**
  * StringManager is a singleton that provides typed access to all localized
  * strings. Use `StringManager.getInstance()` everywhere — never construct it
@@ -103,34 +82,33 @@ export class StringManager {
    * Each property updates automatically when the locale changes.
    */
   public getScreenNames(): {
-    readonly simStringProperty: ReadOnlyProperty<string>;
+    readonly oneAtomStringProperty: ReadOnlyProperty<string>;
+    readonly multipleAtomsStringProperty: ReadOnlyProperty<string>;
   } {
     return {
-      simStringProperty: stringProperties.screens.simStringProperty,
+      oneAtomStringProperty: stringProperties.screens.oneAtomStringProperty,
+      multipleAtomsStringProperty: stringProperties.screens.multipleAtomsStringProperty,
     };
   }
 
-  /**
-   * Accessibility (Interactive Description) StringProperties.
-   *
-   * Returns the reactive `a11y` string tree used by the parallel DOM:
-   *   - `screenSummary.*` — play-area / control-area overview and an interaction
-   *     hint, read by `SimScreenSummaryContent`.
-   *   - `currentDetails` — a paragraph describing the simulation's current state.
-   *     In a real sim, derive a live version from model Properties (see
-   *     LunarLander's ScreenSummaryContent for the canonical pattern).
-   *
-   * Add `accessibleName` / `accessibleHelpText` strings for individual controls
-   * to the `a11y` group too, then read them through this same nested tree.
-   */
-  public getA11yStrings(): SimA11yStrings {
-    return stringProperties.a11y;
+  /** Accessibility strings for the One Atom screen. */
+  public getOneAtomA11yStrings() {
+    return stringProperties.a11y.oneAtom;
+  }
+
+  /** Accessibility strings for the Multiple Atoms screen. */
+  public getMultipleAtomsA11yStrings() {
+    return stringProperties.a11y.multipleAtoms;
   }
 
   /**
    * Simulation-specific preference labels shown in Preferences → Simulation.
    */
-  public getPreferences(): SimPreferenceStrings {
+  public getLab() {
+    return stringProperties.lab;
+  }
+
+  public getPreferences() {
     return stringProperties.preferences;
   }
 }
