@@ -65,3 +65,27 @@ export const VIEW = {
   levelScale: 53,
   groundY: 224,
 } as const;
+
+/** Vector apparatus dimensions in screen coordinates. */
+export const ARTWORK = {
+  atomRadius: 13,
+  mirrorWidth: 19,
+  spectrumWidth: 170,
+  spectrumHeight: 15,
+  spectrumStep: 5, // nm between SVG gradient stops
+} as const;
+
+/** Energy chart coordinates and illustrative lifetime broadening (screen pixels, not calibrated eV). */
+export const ENERGY_DIAGRAM = {
+  lineStart: 92,
+  lineEnd: 223,
+  badgeX: 234,
+  badgeRadius: 10,
+  energyLabelRight: 84,
+  populationStart: 98,
+  populationSpacing: 5.5,
+  bandHalfHeight: 16,
+  gradientIntervals: 32,
+  minimumLineWidth: 1.5,
+  maximumLineWidth: 12,
+} as const;

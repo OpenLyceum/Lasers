@@ -20,6 +20,7 @@ Use Node 26. Run `npm run lint`, `npm run check`, `npm test`, `npm run build`; b
 ## Notes
 
 - `tests/generators.test.ts`: omitted because template-only rename/scaffold scripts are removed after bootstrap.
-- `assets/`: contains an openly licensed laser photograph with a visible glowing discharge tube (see `assets/README.md`) and PhET-authored lamp, mirror, and atom sprites.
+- `assets/`: contains an openly licensed laser photograph with a visible glowing discharge tube (see `assets/README.md`) and PhET-authored reference sprites. The live apparatus uses SVG geometry (`src/common/view/LaserArtwork.ts`), including an SVG wavelength spectrum (`WavelengthControl.ts`).
+- `src/LasersColors.ts`: black default background and white projector background; panel colors, labels, apparatus gradients and spectral visibility adapt to the active profile.
 - `doc/licenses/`: retained upstream license text.
 - `src/common/model/LaserModel.ts`: owned mutable particle records and seeded RNG avoid allocating Properties for hundreds of short-lived photons; aggregate readouts remain observable.

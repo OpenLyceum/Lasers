@@ -1,17 +1,24 @@
 import { type BooleanProperty, DerivedProperty, type NumberProperty, type TReadOnlyProperty } from "scenerystack/axon";
 import { Dimension2, Range, Vector2 } from "scenerystack/dot";
 import { Shape } from "scenerystack/kite";
-import { HBox, Image, Line, LinearGradient, Node, Path, Rectangle, RichText, Text, VBox } from "scenerystack/scenery";
-import { ResetAllButton, TimeControlNode, VisibleColor, WavelengthNumberControl } from "scenerystack/scenery-phet";
+import {
+  type Circle,
+  Color,
+  HBox,
+  Image,
+  Line,
+  LinearGradient,
+  Node,
+  Path,
+  Rectangle,
+  RichText,
+  Text,
+  VBox,
+} from "scenerystack/scenery";
+import { ResetAllButton, TimeControlNode, VisibleColor } from "scenerystack/scenery-phet";
 import { Dialog, ScreenSummaryContent, ScreenView, type ScreenViewOptions } from "scenerystack/sim";
 import { AquaRadioButtonGroup, Checkbox, HSlider, RectangularPushButton } from "scenerystack/sun";
-import { Tandem } from "scenerystack/tandem";
 import photoUrl from "../../../assets/actual-laser.jpg";
-import lampUrl from "../../../assets/phet/flashlight.png";
-import mirrorUrl from "../../../assets/phet/mirror.gif";
-import blueUrl from "../../../assets/phet/particle-blue-med.gif";
-import grayUrl from "../../../assets/phet/particle-gray-med.gif";
-import redUrl from "../../../assets/phet/particle-red-med.gif";
 import { StringManager } from "../../i18n/StringManager.js";
 import Colors from "../../LasersColors.js";
 import { PHYSICS, VIEW } from "../../LasersConstants.js";
@@ -24,16 +31,18 @@ import { LASERS_CHECKBOX_OPTIONS, LASERS_SLIDER_OPTIONS } from "../LasersControl
 import { LasersPanel } from "../LasersPanel.js";
 import type { LaserModel } from "../model/LaserModel.js";
 import { EnergyDiagramNode } from "./EnergyDiagramNode.js";
+import { createAtomStates, createLamp, createMirror } from "./LaserArtwork.js";
+import { WavelengthControl } from "./WavelengthControl.js";
 
 /** Layout follows the upstream apparatus, rather than arranging its controls as a dashboard. */
 export class LaserScreenView extends ScreenView {
   private readonly model: LaserModel;
-  private readonly scene = new Node();
-  private readonly atomNodes: { node: Node; states: Image[]; label: Text }[] = [];
+  private readonly scene = new Node({ renderer: "svg" });
+  private readonly atomNodes: { node: Node; states: Circle[]; label: Text }[] = [];
   private readonly spectralPaths = new Map<number, Path>();
   private readonly wave = new Path(null, { lineWidth: 2 });
-  private readonly leftMirror: Image;
-  private readonly rightMirror: Image;
+  private readonly leftMirror: Node;
+  private readonly rightMirror: Node;
   private readonly beam: Path;
   private readonly warning: Text;
   private readonly energyDiagram: EnergyDiagramNode;
@@ -55,6 +64,7 @@ export class LaserScreenView extends ScreenView {
     );
     super({
       ...options,
+      renderer: "svg",
       screenSummaryContent: new ScreenSummaryContent({
         playAreaContent: s.summaryStringProperty,
         controlAreaContent: s.controlsStringProperty,
@@ -105,7 +115,8 @@ export class LaserScreenView extends ScreenView {
     const button = (label: TReadOnlyProperty<string>, listener: () => void) => {
       const node = new RectangularPushButton({
         ...FLAT_RECTANGULAR_BUTTON_OPTIONS,
-        content: text(label, 12),
+        baseColor: Colors.controlSurfaceColorProperty,
+        content: text(label, 12).mutate({ fill: Colors.controlSurfaceTextColorProperty }),
         accessibleName: label,
         listener,
       });
@@ -123,7 +134,13 @@ export class LaserScreenView extends ScreenView {
         {
           orientation: "horizontal",
           spacing: 12,
-          radioButtonOptions: { radius: 6 },
+          radioButtonOptions: {
+            radius: 6,
+            centerColor: Colors.controlSurfaceTextColorProperty,
+            selectedColor: Colors.accentColorProperty,
+            deselectedColor: Colors.controlSurfaceColorProperty,
+            stroke: Colors.panelBorderColorProperty,
+          },
           accessibleName: name,
         },
       );
@@ -156,9 +173,9 @@ export class LaserScreenView extends ScreenView {
     this.scene.addChild(
       new Rectangle(cx, cy, cw, ch, {
         fill: new LinearGradient(0, cy, 0, cy + ch)
-          .addColorStop(0, Colors.cavityColorProperty.value)
-          .addColorStop(0.5, Colors.backgroundColorProperty.value)
-          .addColorStop(1, Colors.cavityColorProperty.value),
+          .addColorStop(0, Colors.cavityColorProperty)
+          .addColorStop(0.5, Colors.backgroundColorProperty)
+          .addColorStop(1, Colors.cavityColorProperty),
         opacity: 0.65,
         stroke: Colors.panelBorderColorProperty,
         lineWidth: 1,
@@ -185,56 +202,36 @@ export class LaserScreenView extends ScreenView {
     this.scene.addChild(this.beam);
     const pumpLamps = new Node();
     for (let i = 0; i < (model.multiple ? 8 : 1); i++) {
-      const lamp = new Image(lampUrl);
+      const lamp = createLamp();
       lamp.scale(0.54);
       lamp.rotation = Math.PI / 2;
-      lamp.localBoundsProperty.link(() => {
-        lamp.centerX = model.multiple ? cx + 20 + (i * (cw - 40)) / 7 : cx + cw / 2;
-        lamp.top = 20;
-      });
+      lamp.centerX = model.multiple ? cx + 20 + (i * (cw - 40)) / 7 : cx + cw / 2;
+      lamp.top = 20;
       pumpLamps.addChild(lamp);
     }
     this.scene.addChild(pumpLamps);
-    const seedLamp = new Image(lampUrl);
+    const seedLamp = createLamp();
     seedLamp.scale(0.65);
-    seedLamp.localBoundsProperty.link(() => {
-      seedLamp.left = 16;
-      seedLamp.centerY = cy + ch / 2;
-    });
+    seedLamp.left = 16;
+    seedLamp.centerY = cy + ch / 2;
     this.scene.addChild(seedLamp);
     this.scene.addChild(this.wave);
     for (const atom of model.atoms) {
-      const states = [grayUrl, redUrl, blueUrl].map((url) => new Image(url));
-      for (const image of states) {
-        image.setScaleMagnitude(0.9);
-        image.localBoundsProperty.link(() => {
-          image.centerX = 0;
-          image.centerY = 0;
-        });
-      }
-      const label = text("G", 12);
+      const states = createAtomStates();
+      const label = text("G", 12).mutate({ fill: Colors.atomLabelColorProperty });
       label.centerX = label.centerY = 0;
       const node = new Node({ children: [...states, label] });
       node.setTranslation(cx + atom.x * VIEW.scale, cy + atom.y * VIEW.scale);
       this.atomNodes.push({ node, states, label });
       this.scene.addChild(node);
     }
-    this.leftMirror = new Image(mirrorUrl);
-    this.leftMirror.setScaleMagnitude(1, ch / 161);
+    this.leftMirror = createMirror(ch);
     this.leftMirror.centerX = cx;
     this.leftMirror.centerY = cy + ch / 2;
-    this.rightMirror = new Image(mirrorUrl);
-    this.rightMirror.setScaleMagnitude(-1, ch / 161);
+    this.rightMirror = createMirror(ch);
+    this.rightMirror.setScaleMagnitude(-1, 1);
     this.rightMirror.centerX = cx + cw;
     this.rightMirror.centerY = cy + ch / 2;
-    this.leftMirror.localBoundsProperty.link(() => {
-      this.leftMirror.centerX = cx;
-      this.leftMirror.centerY = cy + ch / 2;
-    });
-    this.rightMirror.localBoundsProperty.link(() => {
-      this.rightMirror.centerX = cx + cw;
-      this.rightMirror.centerY = cy + ch / 2;
-    });
     this.scene.addChild(this.leftMirror);
     this.scene.addChild(this.rightMirror);
     this.addChild(this.scene);
@@ -242,13 +239,10 @@ export class LaserScreenView extends ScreenView {
     const lampControl = (pump: boolean) => {
       const rate = pump ? model.pumpRateProperty : model.seedRateProperty;
       const wavelength = pump ? model.pumpWavelengthProperty : model.seedWavelengthProperty;
-      const spectrum = new WavelengthNumberControl(wavelength, {
-        tandem: Tandem.OPT_OUT,
-        title: pump ? s.pumpWavelengthStringProperty : s.seedWavelengthStringProperty,
-        range: new Range(380, 780),
-        titleNodeOptions: { font: "13px sans-serif", maxWidth: 190, fill: Colors.textColorProperty },
-        spectrumSliderTrackOptions: { size: new Dimension2(170, 15) },
-      });
+      const spectrum = new WavelengthControl(
+        wavelength,
+        pump ? s.pumpWavelengthStringProperty : s.seedWavelengthStringProperty,
+      );
       spectrum.scale(0.72);
       traversal.push(spectrum);
       const intensity = slider(
@@ -454,7 +448,7 @@ export class LaserScreenView extends ScreenView {
     this.rightMirror.opacity = 0.4 + (m.reflectivityProperty.value / 100) * 0.6;
     this.beam.visible = m.beamProperty.value && (m.multiple || m.threeLevelsProperty.value);
     this.beam.opacity = (m.pumpRateProperty.value / 400) * 0.27;
-    this.beam.fill = VisibleColor.wavelengthToColor(m.pumpWavelengthProperty.value);
+    this.beam.fill = this.photonColor(m.pumpWavelengthProperty.value);
     this.warning.visible = m.explodedProperty.value;
     m.atoms.forEach((a, i) => {
       const atom = this.atomNodes[i];
@@ -508,7 +502,11 @@ export class LaserScreenView extends ScreenView {
       if (!path) {
         path = new Path(null, {
           lineWidth: 3,
-          stroke: this.photonColor(wavelength),
+          stroke: new DerivedProperty(
+            [Colors.backgroundColorProperty, Colors.upperColorProperty, Colors.pumpColorProperty],
+            () => this.photonColor(wavelength),
+          ),
+          lineCap: "round",
         });
         this.spectralPaths.set(wavelength, path);
         this.scene.addChild(path);
@@ -519,12 +517,16 @@ export class LaserScreenView extends ScreenView {
 
   private photonColor(wavelength: number) {
     if (wavelength > 780) {
-      return Colors.upperColorProperty;
+      return Colors.upperColorProperty.value;
     }
     if (wavelength < 380) {
-      return Colors.pumpColorProperty;
+      return Colors.pumpColorProperty.value;
     }
-    return VisibleColor.wavelengthToColor(wavelength);
+    const color = VisibleColor.wavelengthToColor(wavelength);
+    // Preserve wavelength hue while keeping violet visible on black and yellow visible on white.
+    return Color.getLuminance(Colors.backgroundColorProperty.value) > 0.5
+      ? color.colorUtilsDarker(0.4)
+      : color.colorUtilsBrighter(0.2);
   }
 
   private renderWave(): void {
@@ -551,9 +553,7 @@ export class LaserScreenView extends ScreenView {
       }
     }
     this.wave.shape = wave;
-    this.wave.stroke = VisibleColor.wavelengthToColor(PHYSICS.hc / m.middleEnergyProperty.value, {
-      irColor: Colors.upperColorProperty.value,
-    });
+    this.wave.stroke = this.photonColor(PHYSICS.hc / m.middleEnergyProperty.value);
   }
 
   public override step(dt: number): void {

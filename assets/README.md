@@ -24,4 +24,4 @@ The visible pink glow is the gas discharge inside the tube. The laser output app
 
 ## Upstream apparatus sprites
 
-The PhET-authored lamp, mirror and atom sprites in `phet/` retain their upstream attribution in `phet/license.txt`. See [upstream provenance](../doc/upstream.md) and [the retained upstream license](../doc/licenses/PhET-GPL-2.txt).
+The PhET-authored lamp, mirror and atom sprites in `phet/` are retained as reference material and retain their upstream attribution in `phet/license.txt`. The live apparatus uses SVG geometry in `src/common/view/LaserArtwork.ts`. See [upstream provenance](../doc/upstream.md) and [the retained upstream license](../doc/licenses/PhET-GPL-2.txt).

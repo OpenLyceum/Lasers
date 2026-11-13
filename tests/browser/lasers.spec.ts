@@ -1,6 +1,67 @@
 import { expect, test } from "@playwright/test";
+import type { Color, Node } from "scenerystack/scenery";
+
+type BrowserSim = {
+  selectedScreenProperty: { value: { view: Node; backgroundColorProperty: { value: Color } } };
+  preferencesModel: { visualModel: { colorProfileProperty: { value: string } } };
+};
+
+declare global {
+  interface Window {
+    phet: { joist: { sim: BrowserSim } };
+  }
+}
 
 for (const screen of [1, 2]) {
+  test(`screen ${screen} uses SVG and switches its full palette while paused`, async ({ page }) => {
+    const errors: string[] = [];
+    page.on("pageerror", (error) => errors.push(error.message));
+    await page.goto(`/?screens=${screen}&ea`);
+    const mirrors = page.getByRole("checkbox", { name: "Enable mirrors", exact: true });
+    await expect(mirrors).toBeAttached();
+    await mirrors.focus();
+    await page.keyboard.press("Space");
+    // Exercise emitted photons as well as the initial apparatus.
+    if (screen === 2) {
+      const pump = page.getByRole("slider", { name: "Pump rate (photons/s)", exact: true });
+      await pump.focus();
+      await page.keyboard.press("End");
+    }
+    const pause = page.getByRole("button", { name: "Pause", exact: true });
+    await pause.focus();
+    await page.keyboard.press("Enter");
+
+    for (const profile of ["default", "projector", "default"]) {
+      await page.evaluate((name) => {
+        window.phet.joist.sim.preferencesModel.visualModel.colorProfileProperty.value = name;
+      }, profile);
+      const background = profile === "default" ? "rgb(0,0,0)" : "rgb(255,255,255)";
+      await expect
+        .poll(() =>
+          page.evaluate(() => window.phet.joist.sim.selectedScreenProperty.value.backgroundColorProperty.value.toCSS()),
+        )
+        .toBe(background);
+      // Check the actual SVG gradient, which must update even with physics paused.
+      const cavityCenter = page.locator('svg linearGradient stop[offset="0.5"]').first();
+      await expect(cavityCenter).toHaveCSS("stop-color", profile === "default" ? "rgb(0, 0, 0)" : "rgb(255, 255, 255)");
+      expect(await page.locator("canvas").count()).toBe(0);
+      const rasterNodes = await page.evaluate(() => {
+        const names: string[] = [];
+        const visit = (node: Node) => {
+          if (/Image|CanvasNode/.test(node.constructor.name)) {
+            names.push(node.constructor.name);
+          }
+          node.children.forEach(visit);
+        };
+        visit(window.phet.joist.sim.selectedScreenProperty.value.view);
+        return names;
+      });
+      expect(rasterNodes).toEqual([]);
+      await page.screenshot({ path: `test-results/screen-${screen}-${profile}-svg.png` });
+    }
+    expect(errors).toEqual([]);
+  });
+
   test(`screen ${screen} controls, keyboard, photo and responsive rendering`, async ({ page }) => {
     const errors: string[] = [];
     page.on("pageerror", (e) => errors.push(e.message));
@@ -68,3 +129,52 @@ test("energy lines can be dragged vertically without changing the other level", 
   expect(Number(await middle.getAttribute("aria-valuenow"))).toBeGreaterThan(oldMiddle);
   expect(await upper.getAttribute("aria-valuenow")).toBe(oldUpper);
 });
+
+for (const profile of ["default", "projector"]) {
+  test(`lifetimes broaden only their own level and energy labels stay separate in ${profile}`, async ({ page }) => {
+    await page.goto(`/?screens=2&colorProfile=${profile}&ea`);
+    const lifetime = page.getByRole("slider", { name: "Middle lifetime (model ms)", exact: true });
+    await expect(lifetime).toBeAttached();
+    const energy = page.getByRole("slider", { name: "Middle level above ground (eV)", exact: true });
+    const originalEnergy = await energy.getAttribute("aria-valuenow");
+    const pause = page.getByRole("button", { name: "Pause", exact: true });
+    await pause.focus();
+    await page.keyboard.press("Enter");
+    const readBands = () =>
+      page.locator("svg linearGradient").evaluateAll((gradients) =>
+        gradients
+          .filter((gradient) => gradient.children.length === 33)
+          // Replacing a gradient can reorder SVG definitions. Match levels by their stable center color.
+          .sort((a, b) =>
+            (a.children[16] as SVGStopElement).style.stopColor.localeCompare(
+              (b.children[16] as SVGStopElement).style.stopColor,
+            ),
+          )
+          .map((gradient) =>
+            [...gradient.children].reduce((sum, stop) => sum + Number((stop as SVGStopElement).style.stopOpacity), 0),
+          ),
+      );
+    const before = await readBands();
+    expect(before).toHaveLength(2);
+    // The middle level starts at the longest lifetime, so it has the narrowest line.
+    const middleIndex = before.indexOf(Math.min(...before));
+    await lifetime.focus();
+    await page.keyboard.press("Home");
+    await expect(lifetime).toHaveAttribute("aria-valuenow", "1");
+    await expect.poll(async () => (await readBands())[middleIndex]).toBeGreaterThan((before[middleIndex] ?? 0) * 3);
+    expect((await readBands())[1 - middleIndex]).toBe(before[1 - middleIndex]);
+    await expect(energy).toHaveAttribute("aria-valuenow", originalEnergy ?? "");
+    const energyLabels = page.locator("svg text").filter({ hasText: /^[\d.]+\s+eV$/ });
+    const lifetimeLabels = page.locator("svg text").filter({ hasText: /^Lifetime$/ });
+    await expect(energyLabels).toHaveCount(2);
+    await expect(lifetimeLabels).toHaveCount(2);
+    const energyBounds = await energyLabels.first().boundingBox();
+    const lifetimeBounds = await lifetimeLabels.first().boundingBox();
+    expect(energyBounds).not.toBeNull();
+    expect(lifetimeBounds).not.toBeNull();
+    expect((energyBounds?.x ?? 0) + (energyBounds?.width ?? 0)).toBeLessThan(lifetimeBounds?.x ?? 0);
+    await page.screenshot({ path: `test-results/lifetime-broadening-${profile}.png` });
+    await page.keyboard.press("End");
+    await expect.poll(readBands).toEqual(before);
+  });
+}
