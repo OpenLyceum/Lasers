@@ -1,12 +1,19 @@
 # Lasers
 
+[![CI](../../actions/workflows/ci.yml/badge.svg)](../../actions/workflows/ci.yml)
+
+Explore absorption, spontaneous and stimulated emission, optical pumping, and laser
+operation with one atom or many. A SceneryStack port of PhET's retired Java
+*Lasers* simulation. Built with [SceneryStack](https://scenerystack.org/); runs
+offline as a Progressive Web App.
+
 ## Features
 
-Private TypeScript/SceneryStack port of PhET Lasers: one atom and multiple atoms, absorption, spontaneous and stimulated emission, adjustable energy levels and lifetimes, optical pumping, mirrors, photon/beam/wave views, population readouts, keyboard controls, English/French/Spanish, and projector mode.
+TypeScript/SceneryStack port of PhET Lasers: one atom and multiple atoms, absorption, spontaneous and stimulated emission, adjustable energy levels and lifetimes, optical pumping, mirrors, photon/beam/wave views, population readouts, keyboard controls, English/French/Spanish, and projector mode.
 
 ## Quick Start
 
-Use Node 26. Run `npm ci`, then `npm start`. For a local production preview, run `npm run build` followed by `npm run preview`. No hosted deployment is configured.
+Use Node 26. Run `npm ci`, then `npm start`. For a local production preview, run `npm run build` followed by `npm run preview`. Live build: [openlyceum.github.io/Lasers](https://openlyceum.github.io/Lasers/).
 
 ## Scripts
 
@@ -22,4 +29,4 @@ Port infrastructure is AGPL-3.0-or-later. PhET source-derived behavior and the u
 
 ## Contributing
 
-Private development only; follow AGENTS.md and the organization conventions. Do not publish or onboard this repository until explicitly requested.
+Follow [AGENTS.md](AGENTS.md) and the organization conventions in [OpenLyceum/.github](https://github.com/OpenLyceum/.github). Issues and pull requests welcome.
