@@ -1,7 +1,7 @@
 import { type BooleanProperty, DerivedProperty, type NumberProperty, type TReadOnlyProperty } from "scenerystack/axon";
 import { Dimension2, Range, Vector2 } from "scenerystack/dot";
 import { Shape } from "scenerystack/kite";
-import { HBox, Image, Line, LinearGradient, Node, Path, Rectangle, Text, VBox } from "scenerystack/scenery";
+import { HBox, Image, Line, LinearGradient, Node, Path, Rectangle, RichText, Text, VBox } from "scenerystack/scenery";
 import { ResetAllButton, TimeControlNode, VisibleColor, WavelengthNumberControl } from "scenerystack/scenery-phet";
 import { Dialog, ScreenSummaryContent, ScreenView, type ScreenViewOptions } from "scenerystack/sim";
 import { AquaRadioButtonGroup, Checkbox, HSlider, RectangularPushButton } from "scenerystack/sun";
@@ -376,13 +376,33 @@ export class LaserScreenView extends ScreenView {
       fill: Colors.panelBackgroundColorProperty,
     });
     this.addChild(toolbar);
-    const photoImage = new Image(photoUrl);
+    const photoImage = new Image(photoUrl, {
+      tagName: "img",
+      ariaLabel: s.photoDescriptionStringProperty,
+    });
     photoImage.maxWidth = 560;
     photoImage.maxHeight = 360;
-    const photoDialog = new Dialog(
-      new VBox({ spacing: 12, children: [photoImage, text("PhET / University of Colorado Boulder", 13)] }),
-      { title: text(s.photoStringProperty, 18), fill: Colors.panelBackgroundColorProperty },
-    );
+    const photoCaption = new RichText(s.photoDescriptionStringProperty, {
+      font: "14px sans-serif",
+      fill: Colors.textColorProperty,
+      lineWrap: 560,
+      tagName: "p",
+      innerContent: s.photoDescriptionStringProperty,
+    });
+    const photoCredit = new RichText(s.photoCreditStringProperty, {
+      font: "13px sans-serif",
+      fill: Colors.textColorProperty,
+      linkFill: Colors.textColorProperty,
+      lineWrap: 560,
+      links: {
+        source: "https://commons.wikimedia.org/wiki/File:HeNe-Laser.JPG",
+        license: "https://creativecommons.org/licenses/by-sa/3.0/",
+      },
+    });
+    const photoDialog = new Dialog(new VBox({ spacing: 12, children: [photoImage, photoCaption, photoCredit] }), {
+      title: text(s.photoStringProperty, 18),
+      fill: Colors.panelBackgroundColorProperty,
+    });
     const photo = button(s.photoStringProperty, () => photoDialog.show());
     photo.left = 12;
     photo.centerY = VIEW.toolbarY + 34;

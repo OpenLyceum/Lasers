@@ -46,6 +46,8 @@
     "allStimulated": "All stimulated transitions",
     "stimulation": "Stimulation probability",
     "photo": "Actual laser photograph",
+    "photoDescription": "Helium–neon laser with its cover removed. The pink glow comes from the gas discharge inside the tube.",
+    "photoCredit": "<a href=\"{{source}}\">Muraer / Wikimedia Commons</a> · <a href=\"{{license}}\">CC BY-SA 3.0</a> · Resized.",
     "close": "Close",
     "oneTitle": "Absorption and emission",
     "manyTitle": "Population inversion and lasing",

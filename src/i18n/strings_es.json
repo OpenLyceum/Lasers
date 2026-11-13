@@ -46,6 +46,8 @@
     "allStimulated": "Todas las transiciones estimuladas",
     "stimulation": "Probabilidad de estimulación",
     "photo": "Fotografía de un láser",
+    "photoDescription": "Láser de helio–neón sin su cubierta. El brillo rosado proviene de la descarga eléctrica en el gas dentro del tubo.",
+    "photoCredit": "<a href=\"{{source}}\">Muraer / Wikimedia Commons</a> · <a href=\"{{license}}\">CC BY-SA 3.0</a> · Imagen redimensionada.",
     "close": "Cerrar",
     "oneTitle": "Absorción y emisión",
     "manyTitle": "Inversión de población y emisión láser",

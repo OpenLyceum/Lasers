@@ -46,6 +46,8 @@
     "allStimulated": "Toutes les transitions stimulées",
     "stimulation": "Probabilité de stimulation",
     "photo": "Photographie d’un laser",
+    "photoDescription": "Laser hélium–néon sans son capot. La lueur rose provient de la décharge électrique dans le gaz à l’intérieur du tube.",
+    "photoCredit": "<a href=\"{{source}}\">Muraer / Wikimedia Commons</a> · <a href=\"{{license}}\">CC BY-SA 3.0</a> · Image redimensionnée.",
     "close": "Fermer",
     "oneTitle": "Absorption et émission",
     "manyTitle": "Inversion de population et effet laser",

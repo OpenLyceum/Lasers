@@ -1,6 +1,6 @@
 # Upstream provenance and behavior inventory
 
-Reference: PhET SVN `https://phet.unfuddle.com/svn/phet_svn/trunk`, revision **75234**. Retrieved via SVN on 2026-11-12. Local immutable references are `../Baseline/PhET/lasers` and `../Baseline/PhET/quantum`, targeted checkouts of `simulations-java/simulations/lasers` and `simulations-java/common/quantum`. The photograph and selected PhET-authored apparatus sprites are included with their original attribution.
+Reference: PhET SVN `https://phet.unfuddle.com/svn/phet_svn/trunk`, revision **75234**. Retrieved via SVN on 2026-11-12. Local immutable references are `../Baseline/PhET/lasers` and `../Baseline/PhET/quantum`, targeted checkouts of `simulations-java/simulations/lasers` and `simulations-java/common/quantum`. Selected PhET-authored apparatus sprites are included with their original attribution.
 
 Reproduce retrieval with `svn checkout --username guest --password guest https://phet.unfuddle.com/svn/phet_svn/trunk/simulations-java/simulations/lasers@75234 ../Baseline/PhET/lasers` and the equivalent common/quantum checkout. The catalog's full-archive alternative is `../Baseline/scripts/fetch-baselines.sh --only PhET/trunk`.
 
@@ -8,7 +8,7 @@ Reproduce retrieval with `svn checkout --username guest --password guest https:/
 
 Original Java Lasers and shared quantum code: Copyright 2002–2012 University of Colorado. Authors credited in the source include Ron LeMaster and PhET contributors. This independently rendered TypeScript adaptation is maintained by OpenLyceum. The upstream trunk license is preserved verbatim under `licenses/PhET-GPL-2.txt`; its application notice offers GPL version 2 or later. The port infrastructure uses AGPL-3.0-or-later. Original PhET trademarks are not used as the application brand.
 
-`assets/actual-laser.jpg` is copied unchanged from upstream `lasers/assets/images/lasers.jpg`, shown with University of Colorado attribution. No AI images or external photographs were introduced.
+`assets/actual-laser.jpg` replaces the upstream photograph with Muraer's [HeNe-Laser.JPG](https://commons.wikimedia.org/wiki/File:HeNe-Laser.JPG), showing an operating helium–neon laser with its glowing discharge tube exposed. It is used under [CC BY-SA 3.0](https://creativecommons.org/licenses/by-sa/3.0/), resized and recompressed with the original framing retained. The dialog includes the creator, source and license links, a modification notice, and a localized description. See `../assets/README.md` for provenance and reproduction instructions.
 
 ## Source inventory
 
@@ -25,7 +25,7 @@ Original Java Lasers and shared quantum code: Copyright 2002–2012 University o
 | UniversalLaserControlPanel | Two/three levels, mirrors, upper-state visibility, lamp photon/beam view, lower-transition photon/wave view |
 | Energy monitor | Adjustable energy levels and both lifetimes; live population readout |
 | Simulation rate / Reset All | Speed, pause, manual step, full deterministic reset |
-| ShowActualButton / help | Original laser photograph dialog; keyboard help and screen summary |
+| ShowActualButton / help | Laser photograph dialog with an openly licensed replacement showing the glowing interior; keyboard help and screen summary |
 | Options menu | All/adjacent stimulated transitions and stimulation probability on the main control panel |
 
 ## Numerical and presentation choices

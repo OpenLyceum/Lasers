@@ -20,6 +20,6 @@ Use Node 26. Run `npm run lint`, `npm run check`, `npm test`, `npm run build`; b
 ## Notes
 
 - `tests/generators.test.ts`: omitted because template-only rename/scaffold scripts are removed after bootstrap.
-- `assets/`: contains the attributed upstream laser photograph and PhET-authored lamp, mirror, and atom sprites.
+- `assets/`: contains an openly licensed laser photograph with a visible glowing discharge tube (see `assets/README.md`) and PhET-authored lamp, mirror, and atom sprites.
 - `doc/licenses/`: retained upstream license text.
 - `src/common/model/LaserModel.ts`: owned mutable particle records and seeded RNG avoid allocating Properties for hundreds of short-lived photons; aggregate readouts remain observable.
