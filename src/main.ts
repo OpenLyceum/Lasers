@@ -25,9 +25,14 @@ import { StringManager } from "./i18n/StringManager.js";
 import LasersColors from "./LasersColors.js";
 import { MultipleAtomsScreen } from "./multiple-atoms/MultipleAtomsScreen.js";
 import { OneAtomScreen } from "./one-atom/OneAtomScreen.js";
+import { LasersPreferencesModel } from "./preferences/LasersPreferencesModel.js";
+import { LasersPreferencesNode } from "./preferences/LasersPreferencesNode.js";
 
 onReadyToLaunch(() => {
   const stringManager = StringManager.getInstance();
+
+  // Simulation-specific preferences (wire query-parameter defaults when any are added).
+  const simPreferences = new LasersPreferencesModel(Tandem.ROOT.createTandem("preferences"));
 
   const screens = [
     new OneAtomScreen({
@@ -49,6 +54,13 @@ onReadyToLaunch(() => {
         supportsProjectorMode: true,
         // Enables keyboard-navigation highlight outlines
         supportsInteractiveHighlights: true,
+      },
+      simulationOptions: {
+        customPreferences: [
+          {
+            createContent: (tandem: Tandem) => new LasersPreferencesNode(simPreferences, tandem),
+          },
+        ],
       },
       localizationOptions: {
         // Adds a language picker in Preferences → Language
