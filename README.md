@@ -19,6 +19,8 @@ Use Node 26. Run `npm ci`, then `npm start`. For a local production preview, run
 
 `npm run lint`, `npm run check`, `npm test`, `npm run build`, `npm run test:fuzz`, and `npx playwright test tests/browser`. Set `FUZZ_PORT` when other simulations are running.
 
+Run `npm run knip` to report unused files, exports, and dependencies (manual check).
+
 ## Tech Stack
 
 SceneryStack 3, TypeScript 7, Vite 8, Biome 2, Vitest, and Playwright. Source provenance, feature inventory, and numerical differences: [doc/upstream.md](doc/upstream.md).

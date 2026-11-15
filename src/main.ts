@@ -29,8 +29,6 @@ import { OneAtomScreen } from "./one-atom/OneAtomScreen.js";
 onReadyToLaunch(() => {
   const stringManager = StringManager.getInstance();
 
-  // Simulation-specific preferences; initial values come from lasersQueryParameters.
-
   const screens = [
     new OneAtomScreen({
       name: stringManager.getScreenNames().oneAtomStringProperty,
