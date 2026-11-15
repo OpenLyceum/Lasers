@@ -18,5 +18,3 @@ LasersNamespace.register("lasersQueryParameters", lasersQueryParameters);
 
 // Log query parameters (for the console / PhET-iO).
 logGlobal("phet.chipper.queryParameters");
-
-export default lasersQueryParameters;
