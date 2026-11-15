@@ -19,7 +19,7 @@ Use Node 26. Run `npm ci`, then `npm start`. For a local production preview, run
 
 `npm run lint`, `npm run check`, `npm test`, `npm run build`, `npm run test:fuzz`, and `npx playwright test tests/browser`. Set `FUZZ_PORT` when other simulations are running.
 
-Run `npm run knip` to report unused files, exports, and dependencies (manual check).
+Run `npm run check:unused` (alias `npm run knip`) to report unused files, exports, and dependencies (manual check). Run `npm run check:architecture` for dependency-cruiser layer and cycle rules on `src/` (manual check).
 
 ## Tech Stack
 
