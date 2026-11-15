@@ -35,7 +35,7 @@ export function createLamp(): Node {
 
 /** Concave silver mirror; callers reflect this node for the output coupler. */
 export function createMirror(height: number): Node {
-  const halfWidth = ARTWORK.mirrorWidth / 2;
+  const halfWidth = ARTWORK.MIRROR_WIDTH / 2;
   return new Path(
     new Shape()
       .moveTo(halfWidth, -height / 2)
@@ -60,9 +60,9 @@ export function createMirror(height: number): Node {
 export function createAtomStates(): Circle[] {
   return [Colors.atomColorProperty, Colors.laserColorProperty, Colors.pumpColorProperty].map(
     (color) =>
-      new Circle(ARTWORK.atomRadius, {
+      new Circle(ARTWORK.ATOM_RADIUS, {
         renderer: "svg",
-        fill: new RadialGradient(-4, -5, 0, 0, 0, ARTWORK.atomRadius)
+        fill: new RadialGradient(-4, -5, 0, 0, 0, ARTWORK.ATOM_RADIUS)
           .addColorStop(0, Colors.highlightColorProperty)
           .addColorStop(0.5, color)
           .addColorStop(1, color),

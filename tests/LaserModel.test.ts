@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { LaserModel } from "../src/common/model/LaserModel.js";
-import { PHYSICS } from "../src/LasersConstants.js";
+import { PHYSICS, RATES, WAVELENGTH } from "../src/LasersConstants.js";
 
 describe("PhET source scenarios", () => {
   it("starts with one ground-state atom, two levels, seed 1/s, and no pump or mirrors", () => {
@@ -50,7 +50,11 @@ describe("PhET source scenarios", () => {
     expect(a.level).toBe(1);
     expect(
       m.photons.some(
-        (p) => p.upper && Math.abs(PHYSICS.hc / p.wavelength - (PHYSICS.hc / 440 - PHYSICS.hc / 680)) < 1e-8,
+        (p) =>
+          p.upper &&
+          Math.abs(
+            PHYSICS.HC / p.wavelength - (PHYSICS.HC / WAVELENGTH.PUMP_DEFAULT - PHYSICS.HC / WAVELENGTH.SEED_DEFAULT),
+          ) < 1e-8,
       ),
     ).toBe(true);
     a.remaining = 0;
@@ -65,14 +69,14 @@ describe("PhET source scenarios", () => {
       m.reflectivityProperty.value = reflectivity;
       const p = m.addPhoton(299, 10, 0, 680);
       m.stepOnce();
-      expect(p.vx).toBe(reflectivity === 100 ? -150 : 150);
+      expect(p.vx).toBe(reflectivity === 100 ? -PHYSICS.PHOTON_SPEED : PHYSICS.PHOTON_SPEED);
       m.dispose();
     }
   });
   it("pauses, manually steps, rejects invalid time and resets deterministically", () => {
     const m = new LaserModel(true);
     const initial = JSON.stringify(m.atoms);
-    m.pumpRateProperty.value = 400;
+    m.pumpRateProperty.value = RATES.PUMP_MAX_MULTIPLE;
     m.playingProperty.value = false;
     m.step(1);
     expect(m.photons).toHaveLength(0);
@@ -104,7 +108,7 @@ describe("PhET source scenarios", () => {
   });
   it("supports population inversion and sustained cavity gain with three-level pumping", () => {
     const m = new LaserModel(true, 42);
-    m.pumpRateProperty.value = 400;
+    m.pumpRateProperty.value = RATES.PUMP_MAX_MULTIPLE;
     m.mirrorsProperty.value = true;
     m.reflectivityProperty.value = 100;
     m.highLifetimeProperty.value = 1;
@@ -117,7 +121,7 @@ describe("PhET source scenarios", () => {
       horizontal = Math.max(horizontal, m.horizontalPhotonsProperty.value);
     }
     expect(inverted).toBe(true);
-    expect(horizontal).toBeGreaterThan(40);
+    expect(horizontal).toBeGreaterThan(PHYSICS.LASING);
     m.dispose();
   });
 });

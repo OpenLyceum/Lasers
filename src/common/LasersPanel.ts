@@ -29,7 +29,7 @@ import { type EmptySelfOptions, optionize } from "scenerystack/phet-core";
 import type { Node } from "scenerystack/scenery";
 import { Panel, type PanelOptions } from "scenerystack/sun";
 import LasersColors from "../LasersColors.js";
-import { PANEL_CORNER_RADIUS } from "../LasersConstants.js";
+import { PANEL, PANEL_CORNER_RADIUS } from "../LasersConstants.js";
 
 export type LasersPanelOptions = PanelOptions;
 
@@ -40,8 +40,8 @@ export class LasersPanel extends Panel {
         fill: LasersColors.panelBackgroundColorProperty,
         stroke: LasersColors.panelBorderColorProperty,
         cornerRadius: PANEL_CORNER_RADIUS,
-        xMargin: 12,
-        yMargin: 10,
+        xMargin: PANEL.X_MARGIN,
+        yMargin: PANEL.Y_MARGIN,
       },
       providedOptions,
     );
