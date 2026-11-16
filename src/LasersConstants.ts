@@ -80,7 +80,8 @@ export const CONTROLS = {
   LAMP_PANEL_SPACING: 12,
   PHOTO_DIALOG_SPACING: 12,
   KEYBOARD_STEP_DIVISOR: 10,
-  READOUT_DECIMALS: 100,
+  /** Scale for rounding slider readouts to hundredths: Math.round(v * factor) / factor. */
+  READOUT_ROUND_FACTOR: 100,
 } as const;
 
 /**
@@ -137,7 +138,8 @@ export const ENERGY = {
   HIGH_LIFETIME_DEFAULT: 100,
   KEYBOARD_STEP: 0.01,
   SHIFT_KEYBOARD_STEP: 0.001,
-  READOUT_DECIMALS: 100,
+  /** Scale for rounding energy readouts to hundredths: Math.round(v * factor) / factor. */
+  READOUT_ROUND_FACTOR: 100,
 } as const;
 
 /** Rate / reflectivity / speed / stimulation defaults and ranges. */
@@ -420,7 +422,8 @@ export const LASER_ARTWORK_SETTINGS = {
 /** Settings for preferences/LasersPreferencesNode.ts. Layout lengths are in px; counts and ratios are dimensionless. */
 export const LASERS_PREFERENCES_NODE_SETTINGS = {
   HEADER_FONT_SIZE: 18,
-  CONSTRUCTOR_SPACING: 12,
+  /** VBox spacing between preference rows (px). */
+  SPACING: 12, // px
 } as const;
 
 /** Seeded linear congruential random generator. */

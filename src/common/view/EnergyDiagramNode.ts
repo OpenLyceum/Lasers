@@ -114,7 +114,7 @@ export class EnergyDiagramNode extends Node {
       });
       const energy = new DerivedProperty(
         [property],
-        (v) => `${Math.round(v * ENERGY.READOUT_DECIMALS) / ENERGY.READOUT_DECIMALS} eV`,
+        (v) => `${Math.round(v * ENERGY.READOUT_ROUND_FACTOR) / ENERGY.READOUT_ROUND_FACTOR} eV`,
       );
       const energyLabel = text(energy, FONTS.ENERGY_READOUT);
       this.addChild(energyLabel);

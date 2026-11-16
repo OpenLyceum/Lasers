@@ -116,7 +116,7 @@ export class LaserScreenView extends ScreenView {
               text(
                 new DerivedProperty(
                   [property],
-                  (v) => `${Math.round(v * CONTROLS.READOUT_DECIMALS) / CONTROLS.READOUT_DECIMALS}`,
+                  (v) => `${Math.round(v * CONTROLS.READOUT_ROUND_FACTOR) / CONTROLS.READOUT_ROUND_FACTOR}`,
                 ),
                 FONTS.SMALL,
               ),

@@ -28,7 +28,7 @@ export class LasersPreferencesNode extends VBox {
 
     super({
       align: "left",
-      spacing: LASERS_PREFERENCES_NODE_SETTINGS.CONSTRUCTOR_SPACING,
+      spacing: LASERS_PREFERENCES_NODE_SETTINGS.SPACING,
       children: [header],
     });
   }
