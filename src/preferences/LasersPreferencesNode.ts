@@ -1,3 +1,4 @@
+import { LASERS_PREFERENCES_NODE_SETTINGS } from "../LasersConstants.js";
 /**
  * LasersPreferencesNode.ts
  *
@@ -21,13 +22,13 @@ export class LasersPreferencesNode extends VBox {
     const prefStrings = StringManager.getInstance().getPreferences();
 
     const header = new Text(prefStrings.titleStringProperty, {
-      font: new PhetFont({ size: 18, weight: "bold" }),
+      font: new PhetFont({ size: LASERS_PREFERENCES_NODE_SETTINGS.HEADER_FONT_SIZE, weight: "bold" }),
       fill: PREFERENCES_TEXT_FILL,
     });
 
     super({
       align: "left",
-      spacing: 12,
+      spacing: LASERS_PREFERENCES_NODE_SETTINGS.CONSTRUCTOR_SPACING,
       children: [header],
     });
   }

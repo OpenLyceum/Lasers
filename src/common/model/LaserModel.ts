@@ -5,7 +5,14 @@
 import { BooleanProperty, NumberProperty } from "scenerystack/axon";
 import { Range } from "scenerystack/dot";
 import type { TModel } from "scenerystack/joist";
-import { APPARATUS as A, PHYSICS as C, ENERGY as E, RATES as R, WAVELENGTH as W } from "../../LasersConstants.js";
+import {
+  APPARATUS as A,
+  PHYSICS as C,
+  ENERGY as E,
+  RATES as R,
+  RANDOM_SEQUENCE,
+  WAVELENGTH as W,
+} from "../../LasersConstants.js";
 
 export type Atom = { x: number; y: number; vx: number; vy: number; level: number; remaining: number; cooldown: number };
 export type Photon = {
@@ -78,8 +85,8 @@ export class LaserModel implements TModel {
   }
 
   private random(): number {
-    this.rng = (Math.imul(this.rng, 1664525) + 1013904223) >>> 0;
-    return (this.rng + 0.5) / 4294967296;
+    this.rng = (Math.imul(this.rng, RANDOM_SEQUENCE.MULTIPLIER) + RANDOM_SEQUENCE.INCREMENT) >>> 0;
+    return (this.rng + 0.5) / RANDOM_SEQUENCE.MODULUS;
   }
 
   public energy(level: number): number {

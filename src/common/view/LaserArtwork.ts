@@ -2,7 +2,7 @@ import { Vector2 } from "scenerystack/dot";
 import { Shape } from "scenerystack/kite";
 import { Circle, LinearGradient, Node, Path, RadialGradient, Rectangle } from "scenerystack/scenery";
 import Colors from "../../LasersColors.js";
-import { ARTWORK } from "../../LasersConstants.js";
+import { ARTWORK, LASER_ARTWORK_SETTINGS } from "../../LasersConstants.js";
 
 /** Vector replacement for the upstream right-facing flashlight, in its original 161 × 82 box. */
 export function createLamp(): Node {
@@ -13,22 +13,46 @@ export function createLamp(): Node {
   return new Node({
     renderer: "svg",
     children: [
-      new Rectangle(1, 22, 114, 38, 17, 17, {
-        fill: bodyGradient,
-        stroke: Colors.lampRimColorProperty,
-        lineWidth: 2,
-      }),
-      new Path(new Shape().moveTo(108, 22).lineTo(153, 2).lineTo(153, 80).lineTo(108, 60).close(), {
-        fill: bodyGradient,
-        stroke: Colors.lampRimColorProperty,
-        lineWidth: 2,
-        lineJoin: "round",
-      }),
-      new Path(Shape.ellipse(new Vector2(153, 41), 7, 39, 0), {
-        fill: Colors.lampLensColorProperty,
-        stroke: Colors.lampRimColorProperty,
-        lineWidth: 2,
-      }),
+      new Rectangle(
+        1,
+        LASER_ARTWORK_SETTINGS.CREATE_LAMP_Y,
+        LASER_ARTWORK_SETTINGS.CREATE_LAMP_WIDTH,
+        LASER_ARTWORK_SETTINGS.CREATE_LAMP_HEIGHT,
+        LASER_ARTWORK_SETTINGS.CREATE_LAMP_CORNER_X,
+        LASER_ARTWORK_SETTINGS.CREATE_LAMP_CORNER_Y,
+        {
+          fill: bodyGradient,
+          stroke: Colors.lampRimColorProperty,
+          lineWidth: LASER_ARTWORK_SETTINGS.CREATE_LAMP_LINE_WIDTH,
+        },
+      ),
+      new Path(
+        new Shape()
+          .moveTo(LASER_ARTWORK_SETTINGS.CREATE_LAMP_X, LASER_ARTWORK_SETTINGS.CREATE_LAMP_Y)
+          .lineTo(LASER_ARTWORK_SETTINGS.LAMP_LENS_CENTER_X, LASER_ARTWORK_SETTINGS.LAMP_SHADE_TOP)
+          .lineTo(LASER_ARTWORK_SETTINGS.LAMP_LENS_CENTER_X, LASER_ARTWORK_SETTINGS.LAMP_SHADE_BOTTOM)
+          .lineTo(LASER_ARTWORK_SETTINGS.CREATE_LAMP_X, LASER_ARTWORK_SETTINGS.LAMP_BODY_BOTTOM)
+          .close(),
+        {
+          fill: bodyGradient,
+          stroke: Colors.lampRimColorProperty,
+          lineWidth: LASER_ARTWORK_SETTINGS.CREATE_LAMP_LINE_WIDTH,
+          lineJoin: "round",
+        },
+      ),
+      new Path(
+        Shape.ellipse(
+          new Vector2(LASER_ARTWORK_SETTINGS.LAMP_LENS_CENTER_X, LASER_ARTWORK_SETTINGS.LAMP_LENS_CENTER_Y),
+          LASER_ARTWORK_SETTINGS.LAMP_LENS_RADIUS_X,
+          LASER_ARTWORK_SETTINGS.LAMP_LENS_RADIUS_Y,
+          0,
+        ),
+        {
+          fill: Colors.lampLensColorProperty,
+          stroke: Colors.lampRimColorProperty,
+          lineWidth: LASER_ARTWORK_SETTINGS.CREATE_LAMP_LINE_WIDTH,
+        },
+      ),
     ],
   });
 }
@@ -50,7 +74,7 @@ export function createMirror(height: number): Node {
         .addColorStop(0.65, Colors.highlightColorProperty)
         .addColorStop(1, Colors.mirrorColorProperty),
       stroke: Colors.mirrorColorProperty,
-      lineWidth: 1.5,
+      lineWidth: LASER_ARTWORK_SETTINGS.CREATE_MIRROR_LINE_WIDTH,
       lineJoin: "round",
     },
   );

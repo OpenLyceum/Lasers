@@ -398,6 +398,41 @@ export const ICON = {
   GRID_COLUMNS: 3,
 } as const;
 
+/** Settings for common/view/LaserArtwork.ts. Layout lengths are in px; counts and ratios are dimensionless. */
+export const LASER_ARTWORK_SETTINGS = {
+  LAMP_LENS_CENTER_X: 153, // px
+  LAMP_SHADE_TOP: 2, // px
+  LAMP_SHADE_BOTTOM: 80, // px
+  LAMP_BODY_BOTTOM: 60, // px
+  LAMP_LENS_CENTER_Y: 41, // px
+  CREATE_LAMP_Y: 22,
+  CREATE_LAMP_WIDTH: 114,
+  CREATE_LAMP_HEIGHT: 38,
+  CREATE_LAMP_CORNER_X: 17,
+  CREATE_LAMP_CORNER_Y: 17,
+  CREATE_LAMP_LINE_WIDTH: 2,
+  CREATE_LAMP_X: 108,
+  LAMP_LENS_RADIUS_X: 7,
+  LAMP_LENS_RADIUS_Y: 39,
+  CREATE_MIRROR_LINE_WIDTH: 1.5,
+} as const;
+
+/** Settings for preferences/LasersPreferencesNode.ts. Layout lengths are in px; counts and ratios are dimensionless. */
+export const LASERS_PREFERENCES_NODE_SETTINGS = {
+  HEADER_FONT_SIZE: 18,
+  CONSTRUCTOR_SPACING: 12,
+} as const;
+
+/** Seeded linear congruential random generator. */
+export const RANDOM_SEQUENCE = {
+  /** LCG multiplier (integer). */
+  MULTIPLIER: 1664525,
+  /** LCG increment (integer). */
+  INCREMENT: 1013904223,
+  /** Unsigned 32-bit state count (2^32). */
+  MODULUS: 4294967296,
+} as const;
+
 LasersNamespace.register("LasersConstants", {
   SCREEN_VIEW_MARGIN,
   PANEL_CORNER_RADIUS,
