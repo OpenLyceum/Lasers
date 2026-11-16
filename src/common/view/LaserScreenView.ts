@@ -1,10 +1,8 @@
-import { type BooleanProperty, DerivedProperty, type NumberProperty, type TReadOnlyProperty } from "scenerystack/axon";
-import { Dimension2, Range, Vector2 } from "scenerystack/dot";
+import { DerivedProperty } from "scenerystack/axon";
+import { Vector2 } from "scenerystack/dot";
 import { Shape } from "scenerystack/kite";
 import {
   type Circle,
-  Color,
-  HBox,
   Image,
   Line,
   LinearGradient,
@@ -12,39 +10,24 @@ import {
   Path,
   Rectangle,
   RichText,
-  Text,
+  type Text,
   VBox,
 } from "scenerystack/scenery";
-import { ResetAllButton, TimeControlNode, VisibleColor } from "scenerystack/scenery-phet";
+import { ResetAllButton, TimeControlNode } from "scenerystack/scenery-phet";
 import { Dialog, ScreenSummaryContent, ScreenView, type ScreenViewOptions } from "scenerystack/sim";
-import { AquaRadioButtonGroup, Checkbox, HSlider, RectangularPushButton } from "scenerystack/sun";
 import photoUrl from "../../../assets/actual-laser.jpg";
 import { StringManager } from "../../i18n/StringManager.js";
 import Colors from "../../LasersColors.js";
-import {
-  BEAM_VIEW,
-  CONTROLS,
-  FONTS,
-  PANEL,
-  PHOTON_VIEW,
-  PHYSICS,
-  POWER_METER,
-  RATES,
-  SCREEN_VIEW_MARGIN,
-  VIEW,
-  WAVE_VIEW,
-  WAVELENGTH,
-} from "../../LasersConstants.js";
-import {
-  FLAT_PLAY_PAUSE_STEP_BUTTON_OPTIONS,
-  FLAT_RECTANGULAR_BUTTON_OPTIONS,
-  FLAT_RESET_ALL_BUTTON_OPTIONS,
-} from "../LasersButtonOptions.js";
-import { LASERS_CHECKBOX_OPTIONS, LASERS_SLIDER_OPTIONS } from "../LasersControlOptions.js";
+import { BEAM_VIEW, CONTROLS, FONTS, PANEL, RATES, SCREEN_VIEW_MARGIN, VIEW } from "../../LasersConstants.js";
+import { FLAT_PLAY_PAUSE_STEP_BUTTON_OPTIONS, FLAT_RESET_ALL_BUTTON_OPTIONS } from "../LasersButtonOptions.js";
 import { LasersPanel } from "../LasersPanel.js";
 import type { LaserModel } from "../model/LaserModel.js";
-import { EnergyDiagramNode } from "./EnergyDiagramNode.js";
+import { createLaserControlHelpers } from "./createLaserControlHelpers.js";
+import { createLaserSidebar } from "./createLaserSidebar.js";
+import type { EnergyDiagramNode } from "./EnergyDiagramNode.js";
 import { createAtomStates, createLamp, createMirror } from "./LaserArtwork.js";
+import { PhotonWaveRenderer } from "./PhotonWaveRenderer.js";
+import { PowerMeterNode } from "./PowerMeterNode.js";
 import { WavelengthControl } from "./WavelengthControl.js";
 
 /** Layout follows the upstream apparatus, rather than arranging its controls as a dashboard. */
@@ -52,16 +35,13 @@ export class LaserScreenView extends ScreenView {
   private readonly model: LaserModel;
   private readonly scene = new Node({ renderer: "svg" });
   private readonly atomNodes: { node: Node; states: Circle[]; label: Text }[] = [];
-  private readonly spectralPaths = new Map<number, Path>();
-  private readonly wave = new Path(null, { lineWidth: WAVE_VIEW.LINE_WIDTH });
   private readonly leftMirror: Node;
   private readonly rightMirror: Node;
   private readonly beam: Path;
   private readonly warning: Text;
+  private readonly powerMeter: PowerMeterNode;
   private readonly energyDiagram: EnergyDiagramNode;
-  private readonly internalBar: Rectangle;
-  private readonly outputBar: Rectangle;
-  private time = 0;
+  private readonly photons: PhotonWaveRenderer;
 
   public constructor(model: LaserModel, options?: ScreenViewOptions) {
     const s = StringManager.getInstance().getLab();
@@ -86,102 +66,10 @@ export class LaserScreenView extends ScreenView {
       }),
     });
     this.model = model;
-    const text = (label: string | TReadOnlyProperty<string>, size: number = FONTS.CONTROL) =>
-      new Text(label, { font: `${size}px sans-serif`, fill: Colors.textColorProperty });
     const traversal: Node[] = [];
-    const slider = (
-      label: TReadOnlyProperty<string>,
-      property: NumberProperty,
-      min: number,
-      max: number,
-      step = 1,
-      width: number = CONTROLS.DEFAULT_SLIDER_WIDTH,
-    ) => {
-      const control = new HSlider(property, new Range(min, max), {
-        ...LASERS_SLIDER_OPTIONS,
-        trackSize: new Dimension2(width, CONTROLS.TRACK_HEIGHT),
-        accessibleName: label,
-        keyboardStep: step,
-        shiftKeyboardStep: step / CONTROLS.KEYBOARD_STEP_DIVISOR,
-      });
-      traversal.push(control);
-      return new VBox({
-        align: "left",
-        spacing: CONTROLS.SLIDER_LABEL_SPACING,
-        children: [
-          new HBox({
-            spacing: CONTROLS.SLIDER_READOUT_SPACING,
-            children: [
-              text(label, FONTS.SMALL),
-              text(
-                new DerivedProperty(
-                  [property],
-                  (v) => `${Math.round(v * CONTROLS.READOUT_ROUND_FACTOR) / CONTROLS.READOUT_ROUND_FACTOR}`,
-                ),
-                FONTS.SMALL,
-              ),
-            ],
-          }),
-          control,
-        ],
-      });
-    };
-    const check = (label: TReadOnlyProperty<string>, property: BooleanProperty) => {
-      const node = new Checkbox(property, text(label, FONTS.LABEL), {
-        ...LASERS_CHECKBOX_OPTIONS,
-        accessibleName: label,
-      });
-      traversal.push(node);
-      return node;
-    };
-    const button = (label: TReadOnlyProperty<string>, listener: () => void) => {
-      const node = new RectangularPushButton({
-        ...FLAT_RECTANGULAR_BUTTON_OPTIONS,
-        baseColor: Colors.controlSurfaceColorProperty,
-        content: text(label, FONTS.LABEL).mutate({ fill: Colors.controlSurfaceTextColorProperty }),
-        accessibleName: label,
-        listener,
-      });
-      traversal.push(node);
-      return node;
-    };
-    const radios = (
-      property: BooleanProperty,
-      labels: [TReadOnlyProperty<string>, TReadOnlyProperty<string>],
-      name: TReadOnlyProperty<string>,
-    ) => {
-      const group = new AquaRadioButtonGroup(
-        property,
-        labels.map((label, i) => ({ value: i === 1, createNode: () => text(label, FONTS.LABEL) })),
-        {
-          orientation: "horizontal",
-          spacing: CONTROLS.RADIO_SPACING,
-          radioButtonOptions: {
-            radius: CONTROLS.RADIO_RADIUS,
-            centerColor: Colors.controlSurfaceTextColorProperty,
-            selectedColor: Colors.accentColorProperty,
-            deselectedColor: Colors.controlSurfaceColorProperty,
-            stroke: Colors.panelBorderColorProperty,
-          },
-          accessibleName: name,
-        },
-      );
-      traversal.push(group);
-      return group;
-    };
-    const group = (title: TReadOnlyProperty<string>, content: Node, minWidth = 0) =>
-      new LasersPanel(
-        new VBox({
-          align: "left",
-          spacing: CONTROLS.GROUP_SPACING,
-          children: [text(title, FONTS.CONTROL), content],
-        }),
-        {
-          xMargin: PANEL.X_MARGIN,
-          yMargin: PANEL.Y_MARGIN,
-          minWidth,
-        },
-      );
+    const helpers = createLaserControlHelpers(traversal);
+    const { text, slider, button, group } = helpers;
+
     this.addChild(
       new Rectangle(0, 0, this.layoutBounds.width, this.layoutBounds.height, { fill: Colors.backgroundColorProperty }),
     );
@@ -249,7 +137,7 @@ export class LaserScreenView extends ScreenView {
     seedLamp.left = VIEW.SEED_LAMP_LEFT;
     seedLamp.centerY = cy + ch / 2;
     this.scene.addChild(seedLamp);
-    this.scene.addChild(this.wave);
+    this.photons = new PhotonWaveRenderer(this.scene);
     for (const atom of model.atoms) {
       const states = createAtomStates();
       const label = text("G", FONTS.LABEL).mutate({ fill: Colors.atomLabelColorProperty });
@@ -317,49 +205,8 @@ export class LaserScreenView extends ScreenView {
     reflectivity.scale(VIEW.REFLECTIVITY_SCALE);
     this.addChild(reflectivity);
 
-    // Power meter restores the two stacked gauges from the original.
-    const powerContent = new Node();
-    powerContent.addChild(
-      text(s.powerTitleStringProperty, FONTS.TITLE).mutate({ left: 0, top: POWER_METER.TITLE_TOP }),
-    );
-    powerContent.addChild(
-      text(s.internalPowerStringProperty, FONTS.SMALL).mutate({ left: 0, top: POWER_METER.INTERNAL_LABEL_TOP }),
-    );
-    powerContent.addChild(
-      text(s.outputPowerStringProperty, FONTS.SMALL).mutate({ left: 0, top: POWER_METER.OUTPUT_LABEL_TOP }),
-    );
-    for (const y of POWER_METER.TRACK_YS) {
-      powerContent.addChild(
-        new Rectangle(POWER_METER.TRACK_X, y, POWER_METER.TRACK_WIDTH, POWER_METER.TRACK_HEIGHT, {
-          fill: Colors.meterBackgroundColorProperty,
-          stroke: Colors.panelBorderColorProperty,
-        }),
-      );
-    }
-    this.internalBar = new Rectangle(POWER_METER.BAR_X, POWER_METER.INTERNAL_BAR_Y, 0, POWER_METER.BAR_HEIGHT, {
-      fill: Colors.gainColorProperty,
-    });
-    this.outputBar = new Rectangle(POWER_METER.BAR_X, POWER_METER.OUTPUT_BAR_Y, 0, POWER_METER.BAR_HEIGHT, {
-      fill: Colors.gainColorProperty,
-    });
-    powerContent.addChild(this.internalBar);
-    powerContent.addChild(this.outputBar);
-    powerContent.addChild(
-      text(s.lasingStringProperty, FONTS.TINY).mutate({
-        left: POWER_METER.LASING_LABEL_LEFT,
-        top: POWER_METER.LASING_LABEL_TOP,
-      }),
-    );
-    powerContent.addChild(
-      text(`${PHYSICS.KABOOM}`, FONTS.TINY).mutate({
-        right: POWER_METER.KABOOM_LABEL_RIGHT,
-        top: POWER_METER.KABOOM_LABEL_TOP,
-      }),
-    );
-    const meter = new LasersPanel(powerContent, { xMargin: PANEL.X_MARGIN, yMargin: PANEL.Y_MARGIN });
-    meter.left = model.multiple ? VIEW.METER_LEFT_MULTIPLE : VIEW.METER_LEFT_SINGLE;
-    meter.top = VIEW.METER_TOP;
-    this.addChild(meter);
+    this.powerMeter = new PowerMeterNode(model);
+    this.addChild(this.powerMeter);
     this.warning = text(s.dangerStringProperty, FONTS.WARNING).mutate({
       left: VIEW.WARNING_LEFT,
       top: VIEW.WARNING_TOP,
@@ -367,79 +214,9 @@ export class LaserScreenView extends ScreenView {
     });
     this.addChild(this.warning);
 
-    this.energyDiagram = new EnergyDiagramNode(model, traversal);
-    const levelGroup = group(
-      s.levelsStringProperty,
-      radios(model.threeLevelsProperty, [s.twoStringProperty, s.threeStringProperty], s.levelsStringProperty),
-      VIEW.CHART_WIDTH,
-    );
-    const optionsGroup = group(
-      s.optionsStringProperty,
-      new VBox({
-        align: "left",
-        spacing: CONTROLS.OPTIONS_SPACING,
-        children: [
-          check(s.mirrorsStringProperty, model.mirrorsProperty),
-          check(s.showUpperStringProperty, model.showUpperProperty),
-          new HBox({
-            spacing: CONTROLS.OPTIONS_COLUMN_SPACING,
-            children: [
-              new VBox({
-                align: "left",
-                spacing: CONTROLS.OPTIONS_INNER_SPACING,
-                children: [
-                  text(s.lampViewStringProperty, FONTS.LABEL),
-                  radios(
-                    model.beamProperty,
-                    [s.photonsStringProperty, s.beamViewStringProperty],
-                    s.lampViewStringProperty,
-                  ),
-                ],
-              }),
-              new VBox({
-                align: "left",
-                spacing: CONTROLS.OPTIONS_INNER_SPACING,
-                children: [
-                  text(s.lowerTransitionStringProperty, FONTS.LABEL),
-                  radios(
-                    model.waveProperty,
-                    [s.photonsStringProperty, s.waveViewStringProperty],
-                    s.lowerTransitionStringProperty,
-                  ),
-                ],
-              }),
-            ],
-          }),
-        ],
-      }),
-      VIEW.CHART_WIDTH,
-    );
-    const advancedDialog = new Dialog(
-      new VBox({
-        align: "left",
-        spacing: CONTROLS.ADVANCED_SPACING,
-        children: [
-          check(s.allStimulatedStringProperty, model.allStimulatedProperty),
-          slider(
-            s.stimulationStringProperty,
-            model.stimulationProperty,
-            RATES.STIMULATION_RANGE.min,
-            RATES.STIMULATION_RANGE.max,
-            RATES.STIMULATION_STEP,
-          ),
-        ],
-      }),
-      { title: text(s.advancedStringProperty, FONTS.DIALOG_TITLE), fill: Colors.panelBackgroundColorProperty },
-    );
-    const advanced = button(s.advancedStringProperty, () => advancedDialog.show());
-    const sidebar = new VBox({
-      align: "left",
-      spacing: CONTROLS.SIDEBAR_SPACING,
-      children: [this.energyDiagram, levelGroup, optionsGroup, advanced],
-    });
-    sidebar.left = VIEW.SIDEBAR_X + VIEW.SIDEBAR_LEFT_INSET;
-    sidebar.top = VIEW.SIDEBAR_TOP;
-    this.addChild(sidebar);
+    const sidebar = createLaserSidebar(model, helpers, traversal);
+    this.energyDiagram = sidebar.energyDiagram;
+    this.addChild(sidebar.node);
 
     const toolbar = new Rectangle(0, VIEW.TOOLBAR_Y, VIEW.SIDEBAR_X, this.layoutBounds.height - VIEW.TOOLBAR_Y, {
       fill: Colors.panelBackgroundColorProperty,
@@ -510,7 +287,7 @@ export class LaserScreenView extends ScreenView {
       listener: () => {
         this.interruptSubtreeInput();
         model.reset();
-        this.time = 0;
+        this.photons.resetTime();
         this.render();
       },
     });
@@ -534,7 +311,7 @@ export class LaserScreenView extends ScreenView {
       BEAM_VIEW.MIRROR_MIN_OPACITY + (m.reflectivityProperty.value / 100) * BEAM_VIEW.MIRROR_OPACITY_SPAN;
     this.beam.visible = m.beamProperty.value && (m.multiple || m.threeLevelsProperty.value);
     this.beam.opacity = (m.pumpRateProperty.value / BEAM_VIEW.OPACITY_RATE_DIVISOR) * BEAM_VIEW.MAX_OPACITY;
-    this.beam.fill = this.photonColor(m.pumpWavelengthProperty.value);
+    this.beam.fill = this.photons.photonColor(m.pumpWavelengthProperty.value);
     this.warning.visible = m.explodedProperty.value;
     m.atoms.forEach((a, i) => {
       const atom = this.atomNodes[i];
@@ -547,128 +324,14 @@ export class LaserScreenView extends ScreenView {
       });
       atom.label.string = a.level === 0 ? "G" : `${a.level}`;
     });
-    this.internalBar.rectWidth = Math.min(
-      POWER_METER.BAR_WIDTH_MAX,
-      (m.horizontalPhotonsProperty.value / PHYSICS.KABOOM) * POWER_METER.BAR_WIDTH_MAX,
-    );
-    this.outputBar.rectWidth = Math.min(
-      POWER_METER.BAR_WIDTH_MAX,
-      (m.outputProperty.value / POWER_METER.OUTPUT_FULL_SCALE) * POWER_METER.BAR_WIDTH_MAX,
-    );
+    this.powerMeter.update(m);
     this.energyDiagram.update(m);
-    this.renderPhotons();
-    this.renderWave();
-  }
-  private renderPhotons(): void {
-    const m = this.model;
-    const spectra = new Map<number, Shape>();
-    for (const p of m.photons) {
-      if (p.upper && !m.showUpperProperty.value) {
-        continue;
-      }
-      const pumping = Math.abs(p.vy) > Math.abs(p.vx);
-      if (pumping && m.beamProperty.value) {
-        continue;
-      }
-      if (!(pumping || p.upper) && m.waveProperty.value) {
-        continue;
-      }
-      const wavelength = Math.round(
-        Math.max(WAVELENGTH.VIEW_CLAMP_MIN, Math.min(WAVELENGTH.VIEW_CLAMP_MAX, p.wavelength)),
-      );
-      let shape = spectra.get(wavelength);
-      if (!shape) {
-        shape = new Shape();
-        spectra.set(wavelength, shape);
-      }
-      const x = VIEW.CAVITY_X + p.x * VIEW.SCALE;
-      const y = VIEW.CAVITY_Y + p.y * VIEW.SCALE;
-      if (
-        x < PHOTON_VIEW.CLIP_MIN_X ||
-        x > PHOTON_VIEW.CLIP_MAX_X ||
-        y < PHOTON_VIEW.CLIP_MIN_Y ||
-        y > PHOTON_VIEW.CLIP_MAX_Y
-      ) {
-        continue;
-      }
-      shape
-        .moveTo(x, y)
-        .lineTo(
-          x - (p.vx / PHYSICS.PHOTON_SPEED) * PHOTON_VIEW.TRAIL_LENGTH,
-          y - (p.vy / PHYSICS.PHOTON_SPEED) * PHOTON_VIEW.TRAIL_LENGTH,
-        );
-    }
-    for (const path of this.spectralPaths.values()) {
-      path.shape = null;
-    }
-    for (const [wavelength, shape] of spectra) {
-      let path = this.spectralPaths.get(wavelength);
-      if (!path) {
-        path = new Path(null, {
-          lineWidth: PHOTON_VIEW.LINE_WIDTH,
-          stroke: new DerivedProperty(
-            [Colors.backgroundColorProperty, Colors.upperColorProperty, Colors.pumpColorProperty],
-            () => this.photonColor(wavelength),
-          ),
-          lineCap: "round",
-        });
-        this.spectralPaths.set(wavelength, path);
-        this.scene.addChild(path);
-      }
-      path.shape = shape;
-    }
-  }
-
-  private photonColor(wavelength: number) {
-    if (wavelength > WAVELENGTH.MAX) {
-      return Colors.upperColorProperty.value;
-    }
-    if (wavelength < WAVELENGTH.MIN) {
-      return Colors.pumpColorProperty.value;
-    }
-    const color = VisibleColor.wavelengthToColor(wavelength);
-    // Preserve wavelength hue while keeping violet visible on black and yellow visible on white.
-    return Color.getLuminance(Colors.backgroundColorProperty.value) > PHOTON_VIEW.LUMINANCE_THRESHOLD
-      ? color.colorUtilsDarker(PHOTON_VIEW.DARKEN_FACTOR)
-      : color.colorUtilsBrighter(PHOTON_VIEW.BRIGHTEN_FACTOR);
-  }
-
-  private renderWave(): void {
-    const m = this.model;
-    const wave = new Shape();
-    if (m.waveProperty.value) {
-      const amplitude = Math.min(
-        WAVE_VIEW.MAX_AMPLITUDE,
-        Math.sqrt(m.horizontalPhotonsProperty.value) * WAVE_VIEW.AMPLITUDE_FACTOR,
-      );
-      for (let x = VIEW.CAVITY_X; x < WAVE_VIEW.END_X; x += WAVE_VIEW.STEP_X) {
-        const outside =
-          x > VIEW.CAVITY_X + VIEW.CAVITY_WIDTH
-            ? Math.sqrt(1 - (m.mirrorsProperty.value ? m.reflectivityProperty.value / 100 : 0))
-            : 1;
-        const y =
-          VIEW.CAVITY_Y +
-          VIEW.CAVITY_HEIGHT / 2 +
-          amplitude *
-            outside *
-            Math.sin(
-              ((x - VIEW.CAVITY_X) / (PHYSICS.HC / m.middleEnergyProperty.value)) * WAVE_VIEW.SPATIAL_SCALE -
-                this.time * WAVE_VIEW.TIME_SCALE,
-            );
-        if (x === VIEW.CAVITY_X) {
-          wave.moveTo(x, y);
-        } else {
-          wave.lineTo(x, y);
-        }
-      }
-    }
-    this.wave.shape = wave;
-    this.wave.stroke = this.photonColor(PHYSICS.HC / m.middleEnergyProperty.value);
+    this.photons.render(m);
   }
 
   public override step(dt: number): void {
     if (this.model.playingProperty.value) {
-      this.time += dt;
+      this.photons.advanceTime(dt);
     }
     this.render();
   }
