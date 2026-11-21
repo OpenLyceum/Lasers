@@ -4,31 +4,67 @@
 
 Explore absorption, spontaneous and stimulated emission, optical pumping, and laser
 operation with one atom or many. A SceneryStack port of PhET's retired Java
-*Lasers* simulation. Built with [SceneryStack](https://scenerystack.org/); runs
-offline as a Progressive Web App.
+*Lasers* simulation. Built with [SceneryStack](https://scenerystack.org/), Vite 8,
+TypeScript 7, and Biome 2.
 
 ## Features
 
-TypeScript/SceneryStack port of PhET Lasers: one atom and multiple atoms, absorption, spontaneous and stimulated emission, adjustable energy levels and lifetimes, optical pumping, mirrors, photon/beam/wave views, population readouts, keyboard controls, English/French/Spanish, and projector mode.
+- Two screens: **One Atom** (stationary atom, two levels by default, seed beam) and **Multiple Atoms** (30 moving atoms, three levels, pump beam)
+- Absorption, spontaneous and stimulated emission with adjustable energy levels and lifetimes
+- Optical pumping, mirrors, and photon / beam / wave views with population readouts
+- Keyboard controls, English/French/Spanish, projector mode, Progressive Web App
+- Provenance and behavior inventory: [doc/upstream.md](doc/upstream.md)
 
 ## Quick Start
 
-Use Node 26. Run `npm ci`, then `npm start`. For a local production preview, run `npm run build` followed by `npm run preview`. Live build: [openlyceum.github.io/Lasers](https://openlyceum.github.io/Lasers/).
+```bash
+npm install
+npm run icons    # generate PNG icons from public/icons/icon.svg
+npm start        # dev server → http://localhost:5173
+```
+
+Live build: [openlyceum.github.io/Lasers](https://openlyceum.github.io/Lasers/). Set `FUZZ_PORT` when other simulations are using the default Playwright port.
 
 ## Scripts
 
-`npm run lint`, `npm run check`, `npm test`, `npm run build`, `npm run icons`, `npm run test:fuzz`, and `npx playwright test tests/browser`. Set `FUZZ_PORT` when other simulations are running.
+| Command | Description |
+|---|---|
+| `npm start` / `npm run dev` | Start Vite dev server |
+| `npm run build` | Type-check + production build → `dist/` |
+| `npm run build:single` | Build a self-contained HTML file |
+| `npm run preview` | Preview the production build locally |
+| `npm test` | Run Vitest unit tests (includes memory-leak suite) |
+| `npm run test:fuzz` | Optional Playwright fuzz smoke: pointer (`?fuzz`) + keyboard (`?fuzzBoard`), with `?ea`, 30s each |
+| `npm run test:fuzz -- 90` | Same fuzz for 90 seconds (`--duration 90` or `FUZZ_DURATION=90` also work) |
+| `npm run test:fuzz:quick` | Shorter fuzz smoke (10s) |
+| `npm run test:fuzz:long` | Longer fuzz smoke (300s) |
+| `npm run check` | TypeScript type check |
+| `npm run lint` | Biome lint check |
+| `npm run check:unused` / `npm run knip` | Report unused files, exports, and dependencies (manual check) |
+| `npm run check:architecture` | dependency-cruiser layer and cycle rules on `src/` (manual check) |
+| `npm run format` | Auto-format all files |
+| `npm run fix` | Lint + auto-fix |
+| `npm run icons` | Regenerate PNG icons from `public/icons/icon.svg` |
+| `npm run release` | `check && lint && build && test`, then version patch + push tags |
+| `npm run clean` | Remove `dist/` |
 
-Run `npm run check:unused` (alias `npm run knip`) to report unused files, exports, and dependencies (manual check). Run `npm run check:architecture` for dependency-cruiser layer and cycle rules on `src/` (manual check).
+New sims start at `version: "0.0.0"` in `package.json`. Bump only when cutting a release (for example `npm version patch` and a matching git tag). Keep `name` in kebab-case; it is separate from the SceneryStack sim identifier in `src/init.ts`, which reads its `version` from `package.json`.
 
 ## Tech Stack
 
-SceneryStack 3, TypeScript 7, Vite 8, Biome 2, Vitest, and Playwright. Source provenance, feature inventory, and numerical differences: [doc/upstream.md](doc/upstream.md).
+| Tool | Version | Purpose |
+|---|---|---|
+| [SceneryStack](https://scenerystack.org/) | ^3.0.0 | Simulation framework |
+| [Vite](https://vitejs.dev/) | ^8 | Build tool + dev server |
+| [TypeScript](https://www.typescriptlang.org/) | ^7 | Type-safe JavaScript |
+| [Biome](https://biomejs.dev/) | ^2.5 | Linting + formatting |
+| [vite-plugin-pwa](https://vite-pwa-org.netlify.app/) | ^2 | PWA + service worker |
 
 ## License
 
-Port infrastructure is AGPL-3.0-or-later. PhET source-derived behavior and the upstream photograph retain University of Colorado attribution and the upstream GPL notice in [doc/licenses/PhET-GPL-2.txt](doc/licenses/PhET-GPL-2.txt). See [doc/upstream.md](doc/upstream.md). This is an OpenLyceum adaptation, not an official PhET product.
+Port infrastructure is AGPL-3.0-or-later. PhET source-derived behavior and the upstream photograph retain University of Colorado attribution and the upstream GPL notice in [doc/licenses/PhET-GPL-2.txt](doc/licenses/PhET-GPL-2.txt). See [doc/upstream.md](doc/upstream.md). This is an OpenLyceum adaptation, not an official PhET product. See also the [OpenLyceum org license](https://github.com/OpenLyceum/.github/blob/main/LICENSE).
 
 ## Contributing
 
-Follow [AGENTS.md](AGENTS.md) and the organization conventions in [OpenLyceum/.github](https://github.com/OpenLyceum/.github). Issues and pull requests welcome.
+See [OpenLyceum contributing guidelines](https://github.com/OpenLyceum/.github/blob/main/CONTRIBUTING.md).
+Report bugs via GitHub Issues; use org issue templates. Follow [AGENTS.md](AGENTS.md) for sim-specific notes.
