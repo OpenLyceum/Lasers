@@ -45,7 +45,7 @@ export class LaserScreenView extends ScreenView {
 
   public constructor(model: LaserModel, options?: ScreenViewOptions) {
     const s = StringManager.getInstance().getLab();
-    const live = new DerivedProperty(
+    const liveProperty = new DerivedProperty(
       [
         s.liveStringProperty,
         model.groundPopulationProperty,
@@ -62,7 +62,7 @@ export class LaserScreenView extends ScreenView {
         playAreaContent: s.summaryStringProperty,
         controlAreaContent: s.controlsStringProperty,
         interactionHintContent: s.hintStringProperty,
-        currentDetailsContent: live,
+        currentDetailsContent: liveProperty,
       }),
     });
     this.model = model;

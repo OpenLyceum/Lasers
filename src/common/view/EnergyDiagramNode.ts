@@ -1,5 +1,5 @@
 import { DerivedProperty, Multilink, type TReadOnlyProperty } from "scenerystack/axon";
-import { Bounds2, Dimension2 } from "scenerystack/dot";
+import { Bounds2, Dimension2, roundSymmetric } from "scenerystack/dot";
 import { Shape } from "scenerystack/kite";
 import { Circle, Line, LinearGradient, Node, Path, Rectangle, Text, VBox } from "scenerystack/scenery";
 import { HSlider, VSlider } from "scenerystack/sun";
@@ -112,11 +112,11 @@ export class EnergyDiagramNode extends Node {
         accessibleName: index === 0 ? s.middleLifetimeStringProperty : s.highLifetimeStringProperty,
         keyboardStep: 1,
       });
-      const energy = new DerivedProperty(
+      const energyProperty = new DerivedProperty(
         [property],
-        (v) => `${Math.round(v * ENERGY.READOUT_ROUND_FACTOR) / ENERGY.READOUT_ROUND_FACTOR} eV`,
+        (v) => `${roundSymmetric(v * ENERGY.READOUT_ROUND_FACTOR) / ENERGY.READOUT_ROUND_FACTOR} eV`,
       );
-      const energyLabel = text(energy, FONTS.ENERGY_READOUT);
+      const energyLabel = text(energyProperty, FONTS.ENERGY_READOUT);
       this.addChild(energyLabel);
       const row = new VBox({
         spacing: D.LIFETIME_ROW_SPACING,
