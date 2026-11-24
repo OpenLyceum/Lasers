@@ -47,3 +47,7 @@ Use Node 26. Run `npm run lint && npm run check && npm run build && npm test`. B
 
 - **`tests/generators.test.ts` omitted:** template-only rename/scaffold scripts are removed after bootstrap, so their generator tests are not kept.
 - **`assets/`:** contains reference imagery beyond the usual `public/icons/` set; documented in `assets/README.md`.
+
+## Accessibility
+
+Follow [Baton/ACCESSIBILITY.md](https://github.com/OpenLyceum/Baton/blob/main/ACCESSIBILITY.md): PDOM names, per-screen `*ScreenSummaryContent`, and keyboard-help content. Document any intentional deviations under Compliance carve-outs.
