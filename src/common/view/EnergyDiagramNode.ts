@@ -9,7 +9,7 @@ import { ENERGY_DIAGRAM as D, ENERGY, FONTS, VIEW } from "../../LasersConstants.
 import { LASERS_SLIDER_OPTIONS } from "../LasersControlOptions.js";
 import type { LaserModel } from "../model/LaserModel.js";
 
-/** Standard vertical SceneryStack sliders with energyProperty-line thumbs: pointer and keyboard share one Property. */
+/** Standard vertical SceneryStack sliders with energy-line thumbs: pointer and keyboard share one Property. */
 export class EnergyDiagramNode extends Node {
   private readonly populations = [new Path(null), new Path(null), new Path(null)];
   public constructor(privateModel: LaserModel, traversal: Node[]) {
@@ -154,7 +154,7 @@ export class EnergyDiagramNode extends Node {
         const x = D.POPULATION_START + (i % D.POPULATION_PER_ROW) * D.POPULATION_SPACING;
         const y =
           VIEW.GROUND_Y -
-          m.energyProperty(level) * VIEW.LEVEL_SCALE -
+          m.energy(level) * VIEW.LEVEL_SCALE -
           D.POPULATION_Y_OFFSET -
           Math.floor(i / D.POPULATION_PER_ROW) * D.POPULATION_ROW_HEIGHT;
         shape.moveTo(x, y).lineTo(x + D.POPULATION_DASH, y);
