@@ -80,7 +80,7 @@ export const CONTROLS = {
   LAMP_PANEL_SPACING: 12,
   PHOTO_DIALOG_SPACING: 12,
   KEYBOARD_STEP_DIVISOR: 10,
-  /** Scale for rounding slider readouts to hundredths: Math.round(v * factor) / factor. */
+  /** Scale for rounding slider readouts to hundredths: round(v * factor) / factor. */
   READOUT_ROUND_FACTOR: 100,
 } as const;
 
@@ -138,7 +138,7 @@ export const ENERGY = {
   HIGH_LIFETIME_DEFAULT: 100,
   KEYBOARD_STEP: 0.01,
   SHIFT_KEYBOARD_STEP: 0.001,
-  /** Scale for rounding energy readouts to hundredths: Math.round(v * factor) / factor. */
+  /** Scale for rounding energy readouts to hundredths: round(v * factor) / factor. */
   READOUT_ROUND_FACTOR: 100,
 } as const;
 

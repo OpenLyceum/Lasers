@@ -1,5 +1,5 @@
 import { DerivedProperty, Multilink, type TReadOnlyProperty } from "scenerystack/axon";
-import { Bounds2, Dimension2 } from "scenerystack/dot";
+import { Bounds2, Dimension2, roundSymmetric } from "scenerystack/dot";
 import { Shape } from "scenerystack/kite";
 import { Circle, Line, LinearGradient, Node, Path, Rectangle, Text, VBox } from "scenerystack/scenery";
 import { HSlider, VSlider } from "scenerystack/sun";
@@ -9,7 +9,7 @@ import { ENERGY_DIAGRAM as D, ENERGY, FONTS, VIEW } from "../../LasersConstants.
 import { LASERS_SLIDER_OPTIONS } from "../LasersControlOptions.js";
 import type { LaserModel } from "../model/LaserModel.js";
 
-/** Standard vertical SceneryStack sliders with energy-line thumbs: pointer and keyboard share one Property. */
+/** Standard vertical SceneryStack sliders with energyProperty-line thumbs: pointer and keyboard share one Property. */
 export class EnergyDiagramNode extends Node {
   private readonly populations = [new Path(null), new Path(null), new Path(null)];
   public constructor(privateModel: LaserModel, traversal: Node[]) {
@@ -112,11 +112,11 @@ export class EnergyDiagramNode extends Node {
         accessibleName: index === 0 ? s.middleLifetimeStringProperty : s.highLifetimeStringProperty,
         keyboardStep: 1,
       });
-      const energy = new DerivedProperty(
+      const energyProperty = new DerivedProperty(
         [property],
-        (v) => `${Math.round(v * ENERGY.READOUT_ROUND_FACTOR) / ENERGY.READOUT_ROUND_FACTOR} eV`,
+        (v) => `${roundSymmetric(v * ENERGY.READOUT_ROUND_FACTOR) / ENERGY.READOUT_ROUND_FACTOR} eV`,
       );
-      const energyLabel = text(energy, FONTS.ENERGY_READOUT);
+      const energyLabel = text(energyProperty, FONTS.ENERGY_READOUT);
       this.addChild(energyLabel);
       const row = new VBox({
         spacing: D.LIFETIME_ROW_SPACING,
@@ -154,7 +154,7 @@ export class EnergyDiagramNode extends Node {
         const x = D.POPULATION_START + (i % D.POPULATION_PER_ROW) * D.POPULATION_SPACING;
         const y =
           VIEW.GROUND_Y -
-          m.energy(level) * VIEW.LEVEL_SCALE -
+          m.energyProperty(level) * VIEW.LEVEL_SCALE -
           D.POPULATION_Y_OFFSET -
           Math.floor(i / D.POPULATION_PER_ROW) * D.POPULATION_ROW_HEIGHT;
         shape.moveTo(x, y).lineTo(x + D.POPULATION_DASH, y);

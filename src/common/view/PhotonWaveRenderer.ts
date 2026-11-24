@@ -6,6 +6,7 @@
  */
 
 import { DerivedProperty } from "scenerystack/axon";
+import { roundSymmetric } from "scenerystack/dot";
 import { Shape } from "scenerystack/kite";
 import { Color, type Node, Path } from "scenerystack/scenery";
 import { VisibleColor } from "scenerystack/scenery-phet";
@@ -64,7 +65,7 @@ export class PhotonWaveRenderer {
       if (!(pumping || p.upper) && model.waveProperty.value) {
         continue;
       }
-      const wavelength = Math.round(
+      const wavelength = roundSymmetric(
         Math.max(WAVELENGTH.VIEW_CLAMP_MIN, Math.min(WAVELENGTH.VIEW_CLAMP_MAX, p.wavelength)),
       );
       let shape = spectra.get(wavelength);

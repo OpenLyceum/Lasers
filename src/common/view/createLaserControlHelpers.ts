@@ -6,7 +6,7 @@
  */
 
 import { type BooleanProperty, DerivedProperty, type NumberProperty, type TReadOnlyProperty } from "scenerystack/axon";
-import { Dimension2, Range } from "scenerystack/dot";
+import { Dimension2, Range, roundSymmetric } from "scenerystack/dot";
 import { HBox, type Node, Text, VBox } from "scenerystack/scenery";
 import { AquaRadioButtonGroup, Checkbox, HSlider, RectangularPushButton } from "scenerystack/sun";
 import Colors from "../../LasersColors.js";
@@ -65,7 +65,7 @@ export function createLaserControlHelpers(traversal: Node[]): LaserControlHelper
             text(
               new DerivedProperty(
                 [property],
-                (v) => `${Math.round(v * CONTROLS.READOUT_ROUND_FACTOR) / CONTROLS.READOUT_ROUND_FACTOR}`,
+                (v) => `${roundSymmetric(v * CONTROLS.READOUT_ROUND_FACTOR) / CONTROLS.READOUT_ROUND_FACTOR}`,
               ),
               FONTS.SMALL,
             ),
