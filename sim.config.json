@@ -6,5 +6,5 @@
   "backgroundColor": "#000000",
   "allowPermissions": [],
   "connectSrc": [],
-  "precacheExtensions": []
+  "precacheExtensions": ["jpg"]
 }

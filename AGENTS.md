@@ -42,6 +42,7 @@ Use Node 26. Run `npm run lint && npm run check && npm run build && npm test`. B
 ## Development notes
 
 - `assets/`: openly licensed laser photograph with a visible glowing discharge tube (see `assets/README.md`) and PhET-authored reference sprites. The live apparatus uses SVG geometry in `LaserArtwork.ts` / `WavelengthControl.ts`.
+- `sim.config.json` includes `jpg` in `precacheExtensions` so the apparatus photograph is available on the first offline launch.
 
 ## Compliance carve-outs
 
